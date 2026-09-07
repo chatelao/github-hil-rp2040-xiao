@@ -1,0 +1,43 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "xiao-flasher"
+version = "0.1.0"
+description = "Automated firmware flashing tool for Seeed Studio XIAO-RP2040"
+readme = "README.md"
+requires-python = ">=3.10"
+license = {text = "MIT"}
+authors = [
+    {name = "XIAO Flasher Contributors"}
+]
+dependencies = [
+    "click>=8.0.0",
+    "pyserial>=3.5",
+    "psutil>=5.9.0",
+    "pyusb>=1.2.1",
+]
+
+[project.scripts]
+xiao-flash = "xiao_flasher.cli:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+minversion = "7.0"
+addopts = "-ra -q"
+testpaths = [
+    "test",
+]
+
+[tool.mypy]
+python_version = "3.10"
+warn_return_any = true
+warn_unused_configs = true
+disallow_untyped_defs = true
+
+[tool.ruff]
+line-length = 88
+target-version = "py310"
