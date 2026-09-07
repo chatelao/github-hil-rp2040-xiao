@@ -62,7 +62,14 @@ def test_concrete_implementations() -> None:
         def validate_firmware(self, file_path: str) -> bool:
             return True
 
-        def flash_uf2(self, file_path: str, target_device: DeviceInfo) -> FlashResult:
+        def flash_uf2(
+            self,
+            file_path: str,
+            target_device: DeviceInfo,
+            use_picotool: bool = False,
+            verify: bool = True,
+            verify_timeout: float = 10.0,
+        ) -> FlashResult:
             return FlashResult(success=True, bytes_written=512, duration_seconds=0.5)
 
     class MockTelemetryLog(ITelemetryLog):

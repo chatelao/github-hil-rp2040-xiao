@@ -59,12 +59,12 @@
   - [x] Implement BOOTSEL volume detection (`RPI-RP2`, VID:PID `2e8a:0003`) using `psutil.disk_partitions()`.
   - [x] Implement 1200-baud touch reset logic to reboot device from runtime to BOOTSEL mode.
   - [x] Unit test discovery logic with mock serial and volume fixtures.
-- [ ] **Task 3.2: Firmware Flasher Module (`xiao_flasher.flasher`)**
-  - [ ] Implement UF2 header validation (family ID `0xe48dba66` for RP2040).
-  - [ ] Implement UF2 binary file streaming to mounted `RPI-RP2` volume.
-  - [ ] Implement `picotool` execution fallback for raw USB programming.
-  - [ ] Implement post-flash verification (volume unmount detection and CDC serial re-enumeration polling).
-  - [ ] Unit test flasher module with file system mocks.
+- [x] **Task 3.2: Firmware Flasher Module (`xiao_flasher.flasher`)** (2026-09-07 18:00 UTC)
+  - [x] Implement UF2 header validation (family ID `0xe48dba66` for RP2040).
+  - [x] Implement UF2 binary file streaming to mounted `RPI-RP2` volume.
+  - [x] Implement `picotool` execution fallback for raw USB programming.
+  - [x] Implement post-flash verification (volume unmount detection and CDC serial re-enumeration polling).
+  - [x] Unit test flasher module with file system mocks.
 - [ ] **Task 3.3: Telemetry & Logging Module (`xiao_flasher.telemetry`)**
   - [ ] Implement console logger with ANSI color formatting.
   - [ ] Implement GitHub Actions Step Summary reporter (`$GITHUB_STEP_SUMMARY`).
