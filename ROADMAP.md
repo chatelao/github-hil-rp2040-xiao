@@ -6,7 +6,7 @@
 | :--- | :--- | :---: |
 | **Phase 1** | Project Setup & CI/CD Infrastructure | ✅ |
 | **Phase 2** | Technical Interfaces & Data Models Definition | ✅ |
-| **Phase 3** | Core Module Implementation | 🚧 |
+| **Phase 3** | Core Module Implementation | ✅ |
 | **Phase 4** | GitHub Action Packaging & Integration Testing | ⏳ |
 | **Phase 5** | Documentation & Release Finalization | ⏳ |
 
@@ -70,10 +70,10 @@
   - [x] Implement GitHub Actions Step Summary reporter (`$GITHUB_STEP_SUMMARY`).
   - [x] Implement structured JSON result exporter (`--json-output`).
   - [x] Unit test telemetry report generation.
-- [ ] **Task 3.4: CLI & Workflow Integration Orchestrator (`xiao_flasher.cli`)**
-  - [ ] Implement CLI argument parsing using `Click` (support short `-f` and long `--firmware` options for all CLI flags).
-  - [ ] Integrate orchestrator flow calling discovery, flasher, and telemetry modules.
-  - [ ] Unit test CLI entry point and exit code handling.
+- [x] **Task 3.4: CLI & Workflow Integration Orchestrator (`xiao_flasher.cli`)** (2026-09-07 20:30 UTC)
+  - [x] Implement CLI argument parsing using `Click` (support short `-f` and long `--firmware` options for all CLI flags).
+  - [x] Integrate orchestrator flow calling discovery, flasher, and telemetry modules.
+  - [x] Unit test CLI entry point and exit code handling.
 
 ---
 
