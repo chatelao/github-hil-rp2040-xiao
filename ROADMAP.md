@@ -5,7 +5,7 @@
 | Phase | Description | Status |
 | :--- | :--- | :---: |
 | **Phase 1** | Project Setup & CI/CD Infrastructure | ✅ |
-| **Phase 2** | Technical Interfaces & Data Models Definition | ⏳ |
+| **Phase 2** | Technical Interfaces & Data Models Definition | ✅ |
 | **Phase 3** | Core Module Implementation | ⏳ |
 | **Phase 4** | GitHub Action Packaging & Integration Testing | ⏳ |
 | **Phase 5** | Documentation & Release Finalization | ⏳ |
@@ -40,15 +40,15 @@
 
 *Note: Interface definitions are established first to enable parallelized development of underlying modules.*
 
-- [ ] **Task 2.1: Data Models Definition (`xiao_flasher.models`)**
-  - [ ] Define `DeviceInfo` dataclass (port, mount point, mode, serial number, VID, PID).
-  - [ ] Define `FlashResult` dataclass (success, bytes written, duration, error message).
-- [ ] **Task 2.2: Device Management Interface (`xiao_flasher.discovery`)**
-  - [ ] Define `IDeviceManagement` abstract base class (`find_devices`, `reset_to_bootsel`).
-- [ ] **Task 2.3: Firmware Transport Interface (`xiao_flasher.flasher`)**
-  - [ ] Define `IFirmwareTransport` abstract base class (`validate_firmware`, `flash_uf2`).
-- [ ] **Task 2.4: Telemetry & Logging Interface (`xiao_flasher.telemetry`)**
-  - [ ] Define `ITelemetryLog` abstract base class (`log_info`, `log_error`, `generate_github_summary`).
+- [x] **Task 2.1: Data Models Definition (`xiao_flasher.models`)** (2026-09-07 11:54 UTC)
+  - [x] Define `DeviceInfo` dataclass (port, mount point, mode, serial number, VID, PID).
+  - [x] Define `FlashResult` dataclass (success, bytes written, duration, error message).
+- [x] **Task 2.2: Device Management Interface (`xiao_flasher.discovery`)** (2026-09-07 11:54 UTC)
+  - [x] Define `IDeviceManagement` abstract base class (`find_devices`, `reset_to_bootsel`).
+- [x] **Task 2.3: Firmware Transport Interface (`xiao_flasher.flasher`)** (2026-09-07 11:54 UTC)
+  - [x] Define `IFirmwareTransport` abstract base class (`validate_firmware`, `flash_uf2`).
+- [x] **Task 2.4: Telemetry & Logging Interface (`xiao_flasher.telemetry`)** (2026-09-07 11:54 UTC)
+  - [x] Define `ITelemetryLog` abstract base class (`log_info`, `log_error`, `generate_github_summary`).
 
 ---
 
