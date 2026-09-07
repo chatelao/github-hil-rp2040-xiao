@@ -82,9 +82,10 @@
 - [ ] **Task 4.1: Composite GitHub Action (`action.yml`)**
   - [ ] Create `action.yml` defining action inputs (firmware path, target port, timeout, forced mode).
   - [ ] Add Python environment setup and `xiao-flasher` package execution steps.
-- [ ] **Task 4.2: End-to-End Integration Tests**
+- [ ] **Task 4.2: End-to-End Integration Tests & Target Sample Compilation**
   - [ ] Develop simulated hardware test harness using virtual serial ports / loopback devices.
-  - [ ] Add integration test suite running in GitHub Actions workflow.
+  - [ ] Set up automated compilation of an Arduino example sketch (e.g., Blink/Serial example) for Seeed Studio XIAO-RP2040 target platform using `arduino-cli`.
+  - [ ] Integrate End-to-End test suite executing firmware compilation and flashing verification in GitHub Actions workflow.
 
 ---
 
