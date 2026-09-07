@@ -65,11 +65,11 @@
   - [x] Implement `picotool` execution fallback for raw USB programming.
   - [x] Implement post-flash verification (volume unmount detection and CDC serial re-enumeration polling).
   - [x] Unit test flasher module with file system mocks.
-- [ ] **Task 3.3: Telemetry & Logging Module (`xiao_flasher.telemetry`)**
-  - [ ] Implement console logger with ANSI color formatting.
-  - [ ] Implement GitHub Actions Step Summary reporter (`$GITHUB_STEP_SUMMARY`).
-  - [ ] Implement structured JSON result exporter (`--json-output`).
-  - [ ] Unit test telemetry report generation.
+- [x] **Task 3.3: Telemetry & Logging Module (`xiao_flasher.telemetry`)** (2026-09-07 19:15 UTC)
+  - [x] Implement console logger with ANSI color formatting.
+  - [x] Implement GitHub Actions Step Summary reporter (`$GITHUB_STEP_SUMMARY`).
+  - [x] Implement structured JSON result exporter (`--json-output`).
+  - [x] Unit test telemetry report generation.
 - [ ] **Task 3.4: CLI & Workflow Integration Orchestrator (`xiao_flasher.cli`)**
   - [ ] Implement CLI argument parsing using `Click` (support short `-f` and long `--firmware` options for all CLI flags).
   - [ ] Integrate orchestrator flow calling discovery, flasher, and telemetry modules.
