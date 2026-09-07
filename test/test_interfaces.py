@@ -1,5 +1,7 @@
 """Tests for Phase 2 data models and interface definitions."""
 
+from pathlib import Path
+
 import pytest
 
 from xiao_flasher.discovery import IDeviceManagement
@@ -87,6 +89,11 @@ def test_concrete_implementations() -> None:
         ) -> None:
             self.logs.append(f"SUMMARY: {result.success}")
 
+        def export_json(
+            self, output_path: str | Path, result: FlashResult, device: DeviceInfo
+        ) -> None:
+            self.logs.append(f"JSON: {output_path}")
+
     dm = MockDeviceManagement()
     devs = dm.find_devices()
     assert len(devs) == 1
@@ -102,4 +109,5 @@ def test_concrete_implementations() -> None:
     telemetry.log_info("Starting")
     telemetry.log_error("Oops")
     telemetry.generate_github_summary(res, bootsel_dev)
-    assert len(telemetry.logs) == 3
+    telemetry.export_json("output.json", res, bootsel_dev)
+    assert len(telemetry.logs) == 4
