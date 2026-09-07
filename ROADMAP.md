@@ -82,10 +82,15 @@
 - [x] **Task 4.1: Composite GitHub Action (`action.yml`)** (2026-09-07 21:15 UTC)
   - [x] Create `action.yml` defining action inputs (firmware path, target port, timeout, forced mode).
   - [x] Add Python environment setup and `xiao-flasher` package execution steps.
-- [ ] **Task 4.2: End-to-End Integration Tests & Target Sample Compilation**
-  - [ ] Develop simulated hardware test harness using virtual serial ports / loopback devices.
-  - [ ] Set up automated compilation of an Arduino example sketch (e.g., Blink/Serial example) for Seeed Studio XIAO-RP2040 target platform using `arduino-cli`.
-  - [ ] Integrate End-to-End test suite executing firmware compilation and flashing verification in GitHub Actions workflow.
+- [ ] **Task 4.2: Simulated Hardware Test Harness**
+  - [ ] Implement virtual serial port device simulator for 1200-baud touch reset handling.
+  - [ ] Implement mock BOOTSEL volume state transition fixture and post-flash verification harness.
+  - [ ] Add unit and end-to-end integration tests using the simulated hardware harness in `test/test_hardware_harness.py`.
+- [ ] **Task 4.3: Target Sample Firmware Compilation Setup**
+  - [ ] Add target RP2040 sample sketch source files in `test/fixtures/sample_sketch/`.
+  - [ ] Add automated compilation script using `arduino-cli` with RP2040 core index to produce target `.uf2` binaries.
+- [ ] **Task 4.4: End-to-End CI Workflow Integration**
+  - [ ] Update `.github/workflows/ci.yml` to include end-to-end simulated hardware flashing verification and action step execution.
 
 ---
 
