@@ -5,7 +5,13 @@ from pathlib import Path
 
 import click
 
-from xiao_flasher.discovery import RASPBERRY_PI_VID, RP2040_BOOTSEL_PID, SEEED_VID, XIAO_RP2040_CDC_PID, DeviceManager
+from xiao_flasher.discovery import (
+    RASPBERRY_PI_VID,
+    RP2040_BOOTSEL_PID,
+    SEEED_VID,
+    XIAO_RP2040_CDC_PID,
+    DeviceManager,
+)
 from xiao_flasher.flasher import UF2Flasher
 from xiao_flasher.models import DeviceInfo, FlashResult
 from xiao_flasher.telemetry import TelemetryLogger
@@ -138,7 +144,7 @@ def main(
         try:
             target_device = device_mgr.reset_to_bootsel(target_device, timeout=timeout)
             logger.log_info(f"Device successfully reset to BOOTSEL mode at mount: {target_device.mount_point}")
-        except Exception as e:
+        except Exception as e:  # noqa: BLE001
             err_msg = f"Failed to reset device to BOOTSEL mode: {e}"
             logger.log_error(err_msg)
             fail_res = FlashResult(
