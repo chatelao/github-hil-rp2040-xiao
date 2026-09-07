@@ -1,0 +1,71 @@
+name: 'XIAO-RP2040 Firmware Flasher'
+description: 'Automated firmware flashing for Seeed Studio XIAO-RP2040 boards attached to GitHub Actions runners.'
+author: 'XIAO Flasher Maintainers'
+branding:
+  icon: 'cpu'
+  color: 'green'
+
+inputs:
+  firmware:
+    description: 'Path to .uf2 firmware file to flash.'
+    required: true
+  port:
+    description: 'Target CDC serial port (e.g., /dev/ttyACM0 or COM3).'
+    required: false
+    default: ''
+  mount:
+    description: 'Target BOOTSEL mount point path.'
+    required: false
+    default: ''
+  timeout:
+    description: 'Timeout in seconds for device reset and verification.'
+    required: false
+    default: '10'
+  use-picotool:
+    description: 'Use picotool for raw USB flashing fallback (true/false).'
+    required: false
+    default: 'false'
+  json-output:
+    description: 'Path to export structured JSON execution summary.'
+    required: false
+    default: ''
+
+runs:
+  using: 'composite'
+  steps:
+    - name: Set up Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: '3.12'
+
+    - name: Install xiao-flasher
+      shell: bash
+      run: |
+        pip install -e "${{ github.action_path }}"
+
+    - name: Flash XIAO-RP2040 Firmware
+      shell: bash
+      run: |
+        ARGS=(-f "${{ inputs.firmware }}")
+
+        if [ -n "${{ inputs.port }}" ]; then
+          ARGS+=(-p "${{ inputs.port }}")
+        fi
+
+        if [ -n "${{ inputs.mount }}" ]; then
+          ARGS+=(-m "${{ inputs.mount }}")
+        fi
+
+        if [ -n "${{ inputs.timeout }}" ]; then
+          ARGS+=(-t "${{ inputs.timeout }}")
+        fi
+
+        if [ "${{ inputs.use-picotool }}" = "true" ]; then
+          ARGS+=(-u)
+        fi
+
+        if [ -n "${{ inputs.json-output }}" ]; then
+          ARGS+=(-j "${{ inputs.json-output }}")
+        fi
+
+        xiao-flash "${ARGS[@]}"
