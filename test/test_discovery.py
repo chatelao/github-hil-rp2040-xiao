@@ -94,6 +94,5 @@ def test_reset_to_bootsel_timeout() -> None:
 
     with patch("serial.Serial"), patch.object(
         dm, "find_devices", return_value=[]
-    ), patch("time.sleep"):
-        with pytest.raises(TimeoutError, match="Timed out after 0.1 seconds"):
-            dm.reset_to_bootsel(dev, timeout=0.1)
+    ), patch("time.sleep"), pytest.raises(TimeoutError, match="Timed out after 0.1 seconds"):
+        dm.reset_to_bootsel(dev, timeout=0.1)

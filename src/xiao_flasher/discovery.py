@@ -49,17 +49,21 @@ class DeviceManager(IDeviceManagement):
         # 1. Check CDC Serial ports for Runtime mode
         ports = serial.tools.list_ports.comports()
         for p in ports:
-            if p.vid is not None and p.pid is not None:
-                if p.vid == self.runtime_vid and p.pid == self.runtime_pid:
-                    devices.append(
-                        DeviceInfo(
-                            mode="RUNTIME",
-                            vid=p.vid,
-                            pid=p.pid,
-                            port=p.device,
-                            serial_number=p.serial_number,
-                        )
+            if (
+                p.vid is not None
+                and p.pid is not None
+                and p.vid == self.runtime_vid
+                and p.pid == self.runtime_pid
+            ):
+                devices.append(
+                    DeviceInfo(
+                        mode="RUNTIME",
+                        vid=p.vid,
+                        pid=p.pid,
+                        port=p.device,
+                        serial_number=p.serial_number,
                     )
+                )
 
         # 2. Check Mounted Volumes for BOOTSEL mode (RPI-RP2)
         partitions = psutil.disk_partitions(all=True)
@@ -94,7 +98,7 @@ class DeviceManager(IDeviceManagement):
         try:
             s = serial.Serial(device.port, 1200)
             s.close()
-        except Exception:
+        except Exception:  # noqa: S110, BLE001
             # Port opening/closing to signal reboot may throw port closed error on reset
             pass
 
