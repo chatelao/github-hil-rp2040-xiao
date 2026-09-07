@@ -6,7 +6,7 @@
 | :--- | :--- | :---: |
 | **Phase 1** | Project Setup & CI/CD Infrastructure | ✅ |
 | **Phase 2** | Technical Interfaces & Data Models Definition | ✅ |
-| **Phase 3** | Core Module Implementation | ⏳ |
+| **Phase 3** | Core Module Implementation | 🚧 |
 | **Phase 4** | GitHub Action Packaging & Integration Testing | ⏳ |
 | **Phase 5** | Documentation & Release Finalization | ⏳ |
 
@@ -54,11 +54,11 @@
 
 ### Phase 3: Core Module Implementation
 
-- [ ] **Task 3.1: Device Discovery & Bootloader Controller (`xiao_flasher.discovery`)**
-  - [ ] Implement USB CDC runtime port detection (VID:PID `288a:0003` / custom) using `pyserial`.
-  - [ ] Implement BOOTSEL volume detection (`RPI-RP2`, VID:PID `2e8a:0003`) using `psutil.disk_partitions()`.
-  - [ ] Implement 1200-baud touch reset logic to reboot device from runtime to BOOTSEL mode.
-  - [ ] Unit test discovery logic with mock serial and volume fixtures.
+- [x] **Task 3.1: Device Discovery & Bootloader Controller (`xiao_flasher.discovery`)** (2026-09-07 16:25 UTC)
+  - [x] Implement USB CDC runtime port detection (VID:PID `288a:0003` / custom) using `pyserial`.
+  - [x] Implement BOOTSEL volume detection (`RPI-RP2`, VID:PID `2e8a:0003`) using `psutil.disk_partitions()`.
+  - [x] Implement 1200-baud touch reset logic to reboot device from runtime to BOOTSEL mode.
+  - [x] Unit test discovery logic with mock serial and volume fixtures.
 - [ ] **Task 3.2: Firmware Flasher Module (`xiao_flasher.flasher`)**
   - [ ] Implement UF2 header validation (family ID `0xe48dba66` for RP2040).
   - [ ] Implement UF2 binary file streaming to mounted `RPI-RP2` volume.
