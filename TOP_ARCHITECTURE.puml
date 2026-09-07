@@ -1,0 +1,32 @@
+@startuml TOP_ARCHITECTURE
+skinparam componentStyle uml2
+skinparam backgroundColor #FFFFFF
+
+package "GitHub Actions / CLI Host Environment" {
+    [Workflow Integration Orchestrator\n(xiao_flasher.cli)] as Orchestrator
+    [Device Discovery &\nBootloader Controller\n(xiao_flasher.discovery)] as DeviceController
+    [Firmware Flasher Module\n(xiao_flasher.flasher)] as Flasher
+    [Status & Logging\nTelemetry Module\n(xiao_flasher.telemetry)] as Telemetry
+}
+
+package "Target Hardware (Seeed Studio XIAO-RP2040)" {
+    [RP2040 Bootloader ROM\n(BOOTSEL / RPI-RP2 Volume)] as Bootloader
+    [RP2040 Application Firmware\n(Runtime CDC Serial Port)] as RuntimeFirmware
+}
+
+cloud "Storage & Workspace" {
+    [Firmware Binary File\n(.uf2 / .bin / .elf)] as FirmwareArtifact
+}
+
+' Dataflows & Interfaces
+Orchestrator --> FirmwareArtifact : Reads binary file
+Orchestrator --> DeviceController : Invokes discovery & mode reset\n(I-Device-Management)
+DeviceController --> RuntimeFirmware : 1200-baud CDC reset touch / port scan
+DeviceController --> Bootloader : Detects RPI-RP2 mass storage / USB VID:PID
+Orchestrator --> Flasher : Triggers firmware write\n(I-Firmware-Transport)
+Flasher --> FirmwareArtifact : Reads UF2 blocks
+Flasher --> Bootloader : Copies UF2 file / picotool command
+Orchestrator --> Telemetry : Sends telemetry & logs\n(I-Telemetry-Log)
+Telemetry --> [GitHub Action Summary / Terminal Stdout] : Formatted execution report
+
+@enduml
