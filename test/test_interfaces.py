@@ -1,6 +1,5 @@
 """Tests for Phase 2 data models and interface definitions."""
 
-from typing import List, Optional
 import pytest
 
 from xiao_flasher.discovery import IDeviceManagement
@@ -51,7 +50,7 @@ def test_concrete_implementations() -> None:
     """Test concrete subclasses implementing the abstract interfaces."""
 
     class MockDeviceManagement(IDeviceManagement):
-        def find_devices(self) -> List[DeviceInfo]:
+        def find_devices(self) -> list[DeviceInfo]:
             return [DeviceInfo(mode="RUNTIME", vid=0x288A, pid=0x0003)]
 
         def reset_to_bootsel(
@@ -68,12 +67,12 @@ def test_concrete_implementations() -> None:
 
     class MockTelemetryLog(ITelemetryLog):
         def __init__(self) -> None:
-            self.logs: List[str] = []
+            self.logs: list[str] = []
 
         def log_info(self, message: str) -> None:
             self.logs.append(f"INFO: {message}")
 
-        def log_error(self, message: str, error: Optional[Exception] = None) -> None:
+        def log_error(self, message: str, error: Exception | None = None) -> None:
             self.logs.append(f"ERROR: {message}")
 
         def generate_github_summary(

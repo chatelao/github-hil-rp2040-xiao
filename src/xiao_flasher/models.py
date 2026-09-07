@@ -1,7 +1,6 @@
 """Data models for xiao_flasher."""
 
 from dataclasses import dataclass
-from typing import Optional
 
 
 @dataclass
@@ -11,9 +10,9 @@ class DeviceInfo:
     mode: str
     vid: int
     pid: int
-    port: Optional[str] = None
-    mount_point: Optional[str] = None
-    serial_number: Optional[str] = None
+    port: str | None = None
+    mount_point: str | None = None
+    serial_number: str | None = None
 
 
 @dataclass
@@ -23,4 +22,4 @@ class FlashResult:
     success: bool
     bytes_written: int
     duration_seconds: float
-    error_message: Optional[str] = None
+    error_message: str | None = None
