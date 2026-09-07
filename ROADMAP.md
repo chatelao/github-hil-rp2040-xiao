@@ -4,7 +4,7 @@
 
 | Phase | Description | Status |
 | :--- | :--- | :---: |
-| **Phase 1** | Project Setup & CI/CD Infrastructure | 🚧 |
+| **Phase 1** | Project Setup & CI/CD Infrastructure | ✅ |
 | **Phase 2** | Technical Interfaces & Data Models Definition | ⏳ |
 | **Phase 3** | Core Module Implementation | ⏳ |
 | **Phase 4** | GitHub Action Packaging & Integration Testing | ⏳ |
@@ -30,9 +30,9 @@
   - [x] Create Python project structure (`src/xiao_flasher/`, `test/`) with `pyproject.toml` / `setup.py`.
   - [x] Implement `src/install.sh` for runtime installation setup.
   - [x] Implement `test/install.sh` for installing test dependencies (`pytest`, `pytest-cov`, `mypy`, `ruff`).
-- [ ] **Task 1.2: CI/CD Pipeline Initial Setup**
-  - [ ] Create GitHub Actions workflow (`.github/workflows/ci.yml`) for linting, type-checking, and running unit tests on every commit/PR.
-  - [ ] Configure dependency and build caching in GitHub Actions workflows.
+- [x] **Task 1.2: CI/CD Pipeline Initial Setup** (2026-09-07 08:30 UTC)
+  - [x] Create GitHub Actions workflow (`.github/workflows/ci.yml`) for linting, type-checking, and running unit tests on every commit/PR.
+  - [x] Configure dependency and build caching in GitHub Actions workflows.
 
 ---
 

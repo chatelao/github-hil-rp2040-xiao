@@ -1,0 +1,40 @@
+name: CI
+
+on:
+  push:
+    branches: [ main, master ]
+  pull_request:
+    branches: [ main, master ]
+
+jobs:
+  test:
+    name: Lint, Type Check & Test
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: ["3.10", "3.11", "3.12"]
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+          cache: 'pip'
+
+      - name: Install runtime dependencies
+        run: ./src/install.sh
+
+      - name: Install test dependencies
+        run: ./test/install.sh
+
+      - name: Run linter (ruff)
+        run: ruff check .
+
+      - name: Run type checker (mypy)
+        run: mypy src test
+
+      - name: Run unit tests with coverage
+        run: python -m pytest --cov=xiao_flasher
