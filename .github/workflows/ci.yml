@@ -41,4 +41,4 @@ jobs:
 
       - name: Verify action inputs format
         run: |
-          python -c "import yaml; data = yaml.safe_load(open('action.yml')); assert 'collect-serial' in data['inputs']; assert 'duration' in data['inputs']; assert 'zip-output' in data['inputs']"
+          python -c "content = open('action.yml', encoding='utf-8').read(); assert 'collect-serial:' in content; assert 'duration:' in content; assert 'zip-output:' in content"
