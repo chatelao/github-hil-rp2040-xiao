@@ -36,5 +36,8 @@ jobs:
       - name: Run type checker (mypy)
         run: mypy src test
 
-      - name: Run unit tests with coverage
+      - name: Compile target sample sketch firmware
+        run: ./test/fixtures/compile_sample.sh
+
+      - name: Run unit and end-to-end hardware harness tests with coverage
         run: python -m pytest --cov=xiao_flasher
