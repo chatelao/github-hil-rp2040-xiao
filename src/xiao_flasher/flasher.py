@@ -14,6 +14,7 @@ UF2_MAGIC_START1 = 0x9E5D5157
 UF2_MAGIC_END = 0x0AB16F30
 FLAG_FAMILY_ID_PRESENT = 0x00002000
 RP2040_FAMILY_ID = 0xE48DBA66
+RP2040_ABSOLUTE_FAMILY_ID = 0xE48BFF56
 UF2_BLOCK_SIZE = 512
 
 
@@ -75,7 +76,10 @@ class UF2Flasher(IFirmwareTransport):
             ):
                 return False
 
-            return not (flags & FLAG_FAMILY_ID_PRESENT and family_id != RP2040_FAMILY_ID)
+            return not (
+                flags & FLAG_FAMILY_ID_PRESENT
+                and family_id not in (RP2040_FAMILY_ID, RP2040_ABSOLUTE_FAMILY_ID)
+            )
         except Exception:  # noqa: BLE001
             return False
 
