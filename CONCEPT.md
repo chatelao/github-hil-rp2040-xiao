@@ -22,7 +22,7 @@ Alle nötigen Skripte um auf einem XIAO-RP2040 Board eine Firmware aus einem Git
 
 ## Use Cases
 
-### UC-1: Automated Firmware Flashing in GitHub Actions Pipeline
+### UC-1: Automated Firmware Flashing & Serial Data Collection in GitHub Actions Pipeline
 - **Actor**: GitHub Actions Runner (Self-Hosted / Connected Hardware Runner)
 - **Trigger**: GitHub Workflow event (e.g., commit push, release tag, or manual `workflow_dispatch`).
 - **Main Success Scenario**:
@@ -31,7 +31,8 @@ Alle nötigen Skripte um auf einem XIAO-RP2040 Board eine Firmware aus einem Git
   3. Script detects attached XIAO-RP2040 board and verifies its current state (Runtime vs. BOOTSEL bootloader mode).
   4. Script puts/resets the XIAO-RP2040 into BOOTSEL mode if necessary.
   5. Firmware binary is written to the device.
-  6. Script verifies successful write and reports completion status back to the workflow log.
+  6. Script collects serial output from USB-serial port for 20 seconds after flashing.
+  7. Script packages collected serial output into a `.zip` file artifact and reports it back to GitHub.
 
 ### UC-2: Local Developer Firmware Flashing
 - **Actor**: Firmware Developer
@@ -110,6 +111,12 @@ Alle nötigen Skripte um auf einem XIAO-RP2040 Board eine Firmware aus einem Git
 - **Alternative 2.2**: Linux Shell Scripting (Bash + OS utilities `mount`/`cp`). Discarded due to lack of native cross-platform support (e.g. Windows runners) and fragile platform-dependent disk mounting logic.
 - **Alternative 2.3**: Containerized Docker Action Execution. Discarded because mapping raw USB devices and serial ports into Docker containers across various host operating systems introduces privilege issues and host driver restrictions.
 
+### Choice 4: Post-Flash Serial Data Collection & Artifact Packaging
+- **Selected Choice**: **Option 4.1 - 20-Second USB-Serial CDC Stream Capture to Zipped Archive**
+- **Alternative 4.1 (Selected)**: Automated 20-second streaming data collection on the re-enumerated CDC USB serial port after flashing, packaged into a `.zip` file for GitHub Actions artifact uploading.
+- **Alternative 4.2**: Infinite continuous logging without duration timeout. Discarded because CI/CD jobs require deterministic bounded execution timeouts.
+- **Alternative 4.3**: Uncompressed raw text log artifact upload. Discarded because zip archiving reduces bandwidth and storage overhead in workflow runs.
+
 ### Choice 3: Bootloader Mode Triggering Strategy
 - **Selected Choice**: **Option 3.1 - Hybrid Software Reset Trick (1200-baud touch) with Dynamic BOOTSEL Detection**
 - **Alternative 3.1 (Selected)**: Automated reset into BOOTSEL mode via 1200-baud CDC touch (or `picotool reboot -f -u`) combined with automatic UF2 drive detection.
@@ -128,3 +135,5 @@ Below is the summary of discarded alternatives evaluated during conceptual desig
 4. **Docker Container Flashing Environment**: Discarded due to OS-level USB device pass-through complexities in containerized environments.
 5. **Strict Manual BOOTSEL Button Triggering**: Discarded due to incompatibility with unattended remote GitHub Action runners.
 6. **Dedicated GPIO Hardware Reset Circuitry**: Discarded as a baseline requirement to keep hardware setup simple, preserved only as an edge-case test-bench extension.
+7. **Unbounded Serial Logging**: Discarded in favor of 20-second timed data collection to ensure deterministic workflow step exit times.
+8. **Uncompressed Raw Log Artifacts**: Discarded in favor of zipped archive reports (`.zip`).

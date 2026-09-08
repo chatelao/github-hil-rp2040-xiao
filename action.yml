@@ -29,6 +29,18 @@ inputs:
     description: 'Path to export structured JSON execution summary.'
     required: false
     default: ''
+  collect-serial:
+    description: 'Collect USB serial output after flashing (true/false).'
+    required: false
+    default: 'true'
+  duration:
+    description: 'Duration in seconds to collect USB serial output.'
+    required: false
+    default: '20'
+  zip-output:
+    description: 'Path to output .zip archive containing serial log.'
+    required: false
+    default: 'serial_log.zip'
 
 runs:
   using: 'composite'
@@ -68,4 +80,24 @@ runs:
           ARGS+=(-j "${{ inputs.json-output }}")
         fi
 
+        if [ "${{ inputs.collect-serial }}" = "true" ]; then
+          ARGS+=(-c)
+        fi
+
+        if [ -n "${{ inputs.duration }}" ]; then
+          ARGS+=(-d "${{ inputs.duration }}")
+        fi
+
+        if [ -n "${{ inputs.zip-output }}" ]; then
+          ARGS+=(-z "${{ inputs.zip-output }}")
+        fi
+
         xiao-flash "${ARGS[@]}"
+
+    - name: Upload Serial Log Artifact
+      if: inputs.zip-output != '' && always()
+      uses: actions/upload-artifact@v4
+      with:
+        name: serial-log-artifact
+        path: ${{ inputs.zip-output }}
+        if-no-files-found: ignore

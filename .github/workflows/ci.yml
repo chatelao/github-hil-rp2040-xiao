@@ -38,3 +38,7 @@ jobs:
 
       - name: Run unit tests with coverage
         run: python -m pytest --cov=xiao_flasher
+
+      - name: Verify action inputs format
+        run: |
+          python -c "import yaml; data = yaml.safe_load(open('action.yml')); assert 'collect-serial' in data['inputs']; assert 'duration' in data['inputs']; assert 'zip-output' in data['inputs']"

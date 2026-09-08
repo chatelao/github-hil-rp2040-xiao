@@ -61,11 +61,12 @@ The high-level system components and data flows are modeled in `TOP_ARCHITECTURE
   - **Post-Flash Verification**: Monitors volume unmounting (indicating RP2040 flash completion and reset) and waits for optional CDC serial re-enumeration.
 
 ### 4. Status & Logging Telemetry Module (`xiao_flasher.telemetry`)
-- **Responsibility**: Formats execution traces, errors, and timing metrics.
+- **Responsibility**: Formats execution traces, errors, and timing metrics, and handles post-flash serial data collection.
 - **Outputs**:
   - Structured console output (using ANSI colors and status indicators).
   - GitHub Actions Step Summary (`$GITHUB_STEP_SUMMARY` Markdown report).
   - JSON summary reports for test automation frameworks (`--json-output <path>`).
+  - Serial data collection stream logging over USB-serial CDC port for 20 seconds, compressed into a `.zip` artifact (`--zip-output <path>`).
 
 ---
 
@@ -107,6 +108,12 @@ class ITelemetryLog:
     def log_info(message: str) -> None: ...
     def log_error(message: str, error: Exception | None = None) -> None: ...
     def generate_github_summary(result: FlashResult, device: DeviceInfo) -> None: ...
+    def collect_serial_data(
+        port: str,
+        duration: float = 20.0,
+        zip_output_path: str | Path | None = None,
+        baudrate: int = 115200,
+    ) -> Path | None: ...
 ```
 
 ---
@@ -166,3 +173,4 @@ Below is the summary of discarded implementation alternatives:
 6. **PyInstaller single-binary distribution**: Discarded due to platform binary maintenance overhead.
 7. **SWD Hardware Memory Readback Verification**: Discarded due to external hardware probe dependencies.
 8. **Fire-and-forget flashing without verification**: Discarded due to lack of error reporting and verification needed for reliable CI/CD pipelines.
+9. **Uncompressed Raw Serial Logs**: Discarded in favor of zipped archive packaging (`.zip`) for efficient CI artifact retention.

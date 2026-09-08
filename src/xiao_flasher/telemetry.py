@@ -3,9 +3,13 @@
 import json
 import os
 import sys
+import time
+import zipfile
 from abc import ABC, abstractmethod
 from pathlib import Path
 from typing import TextIO
+
+import serial
 
 from xiao_flasher.models import DeviceInfo, FlashResult
 
@@ -30,6 +34,16 @@ class ITelemetryLog(ABC):
         self, output_path: str | Path, result: FlashResult, device: DeviceInfo
     ) -> None:
         """Export structured JSON execution summary to file."""
+
+    @abstractmethod
+    def collect_serial_data(
+        self,
+        port: str,
+        duration: float = 20.0,
+        zip_output_path: str | Path | None = None,
+        baudrate: int = 115200,
+    ) -> Path | None:
+        """Collect serial data from port for duration (seconds) and optional zip output."""
 
 
 class TelemetryLogger(ITelemetryLog):
@@ -136,3 +150,45 @@ class TelemetryLogger(ITelemetryLog):
         path.parent.mkdir(parents=True, exist_ok=True)
         with path.open("w", encoding="utf-8") as f:
             json.dump(data, f, indent=2)
+
+    def collect_serial_data(
+        self,
+        port: str,
+        duration: float = 20.0,
+        zip_output_path: str | Path | None = None,
+        baudrate: int = 115200,
+    ) -> Path | None:
+        """Read CDC serial data for specified duration and package into zip archive."""
+        self.log_info(f"Collecting serial data on port {port} for {duration:.1f} seconds...")
+        collected_lines: list[str] = []
+        start_time = time.time()
+
+        try:
+            with serial.Serial(port, baudrate=baudrate, timeout=0.5) as ser:
+                while time.time() - start_time < duration:
+                    if ser.in_waiting:
+                        raw_line = ser.readline()
+                        line_str = raw_line.decode("utf-8", errors="replace")
+                        collected_lines.append(line_str)
+                    else:
+                        time.sleep(0.05)
+        except Exception as e:  # noqa: BLE001
+            self.log_error(f"Error reading serial port {port}: {e}")
+
+        log_content = "".join(collected_lines)
+        if not zip_output_path:
+            zip_output_path = Path("serial_log.zip")
+        else:
+            zip_output_path = Path(zip_output_path)
+
+        zip_output_path.parent.mkdir(parents=True, exist_ok=True)
+        log_filename = "serial_output.log"
+
+        try:
+            with zipfile.ZipFile(zip_output_path, "w", zipfile.ZIP_DEFLATED) as zf:
+                zf.writestr(log_filename, log_content)
+            self.log_info(f"Serial log successfully saved and zipped to {zip_output_path}")
+            return zip_output_path
+        except Exception as e:  # noqa: BLE001
+            self.log_error(f"Failed to create zip archive {zip_output_path}: {e}")
+            return None

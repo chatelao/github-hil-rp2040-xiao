@@ -2,8 +2,9 @@
 
 import io
 import json
+import zipfile
 from pathlib import Path
-from unittest.mock import patch
+from unittest.mock import MagicMock, patch
 
 from xiao_flasher.models import DeviceInfo, FlashResult
 from xiao_flasher.telemetry import TelemetryLogger
@@ -134,3 +135,49 @@ def test_export_json(tmp_path: Path) -> None:
     assert data["device"]["mount_point"] == "/media/RPI-RP2"
     assert data["device"]["serial_number"] == "XYZ789"
     assert data["device"]["port"] is None
+
+
+def test_collect_serial_data_success(tmp_path: Path) -> None:
+    """Test collect_serial_data reading serial lines and archiving to zip file."""
+    zip_path = tmp_path / "test_serial.zip"
+    logger = TelemetryLogger(use_ansi=False)
+
+    mock_serial = MagicMock()
+    mock_serial.__enter__.return_value = mock_serial
+    mock_serial.in_waiting = True
+    mock_serial.readline.side_effect = [b"Hello World\n", b"Sensor data: 42\n", b""]
+
+    with patch("serial.Serial", return_value=mock_serial):
+        out_path = logger.collect_serial_data(
+            port="/dev/ttyACM0",
+            duration=0.1,
+            zip_output_path=zip_path,
+        )
+
+    assert out_path == zip_path
+    assert zip_path.exists()
+
+    with zipfile.ZipFile(zip_path, "r") as zf:
+        file_list = zf.namelist()
+        assert "serial_output.log" in file_list
+        log_content = zf.read("serial_output.log").decode("utf-8")
+        assert "Hello World" in log_content
+        assert "Sensor data: 42" in log_content
+
+
+def test_collect_serial_data_serial_exception(tmp_path: Path) -> None:
+    """Test collect_serial_data when serial port error occurs."""
+    zip_path = tmp_path / "error_serial.zip"
+    err_stream = io.StringIO()
+    logger = TelemetryLogger(use_ansi=False, error_stream=err_stream)
+
+    with patch("serial.Serial", side_effect=Exception("Serial port disconnected")):
+        out_path = logger.collect_serial_data(
+            port="/dev/ttyACM0",
+            duration=0.1,
+            zip_output_path=zip_path,
+        )
+
+    assert out_path == zip_path
+    assert zip_path.exists()
+    assert "[ERROR] Error reading serial port /dev/ttyACM0: Serial port disconnected" in err_stream.getvalue()

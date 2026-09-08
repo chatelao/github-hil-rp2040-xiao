@@ -94,6 +94,16 @@ def test_concrete_implementations() -> None:
         ) -> None:
             self.logs.append(f"JSON: {output_path}")
 
+        def collect_serial_data(
+            self,
+            port: str,
+            duration: float = 20.0,
+            zip_output_path: str | Path | None = None,
+            baudrate: int = 115200,
+        ) -> Path | None:
+            self.logs.append(f"SERIAL: {port} for {duration}s")
+            return Path("serial.zip")
+
     dm = MockDeviceManagement()
     devs = dm.find_devices()
     assert len(devs) == 1
