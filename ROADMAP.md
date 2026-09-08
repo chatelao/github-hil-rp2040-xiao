@@ -82,10 +82,10 @@
 - [x] **Task 4.1: Composite GitHub Action (`action.yml`)** (2026-09-07 21:15 UTC)
   - [x] Create `action.yml` defining action inputs (firmware path, target port, timeout, forced mode).
   - [x] Add Python environment setup and `xiao-flasher` package execution steps.
-- [ ] **Task 4.2: Simulated Hardware Test Harness**
-  - [ ] Implement virtual serial port device simulator for 1200-baud touch reset handling.
-  - [ ] Implement mock BOOTSEL volume state transition fixture and post-flash verification harness.
-  - [ ] Add unit and end-to-end integration tests using the simulated hardware harness in `test/test_hardware_harness.py`.
+- [x] **Task 4.2: Simulated Hardware Test Harness** (2026-09-07 22:00 UTC)
+  - [x] Implement virtual serial port device simulator for 1200-baud touch reset handling.
+  - [x] Implement mock BOOTSEL volume state transition fixture and post-flash verification harness.
+  - [x] Add unit and end-to-end integration tests using the simulated hardware harness in `test/test_hardware_harness.py`.
 - [ ] **Task 4.3: Target Sample Firmware Compilation Setup**
   - [ ] Add target RP2040 sample sketch source files in `test/fixtures/sample_sketch/`.
   - [ ] Add automated compilation script using `arduino-cli` with RP2040 core index to produce target `.uf2` binaries.
