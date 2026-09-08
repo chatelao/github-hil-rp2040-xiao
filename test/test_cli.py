@@ -29,6 +29,36 @@ def test_cli_help() -> None:
     assert "-v, --verify" in result.output
     assert "-j, --json-output" in result.output
     assert "-t, --timeout" in result.output
+    assert "-c, --collect-serial" in result.output
+    assert "-d, --duration" in result.output
+    assert "-z, --zip-output" in result.output
+
+
+@patch("xiao_flasher.cli.TelemetryLogger.collect_serial_data")
+@patch("xiao_flasher.cli.UF2Flasher.flash_uf2")
+@patch("xiao_flasher.cli.DeviceManager.reset_to_bootsel")
+def test_cli_serial_collection(
+    mock_reset: MagicMock, mock_flash: MagicMock, mock_collect: MagicMock, tmp_path: Path
+) -> None:
+    valid_uf2 = create_valid_uf2(tmp_path)
+    zip_out = tmp_path / "serial.zip"
+    bootsel_dev = DeviceInfo(mode="BOOTSEL", vid=0x2E8A, pid=0x0003, port="/dev/ttyACM0", mount_point="/media/RPI-RP2")
+    mock_reset.return_value = bootsel_dev
+    mock_flash.return_value = FlashResult(
+        success=True, bytes_written=512, duration_seconds=0.1, error_message=None
+    )
+
+    runner = CliRunner()
+    result = runner.invoke(
+        main,
+        ["-f", str(valid_uf2), "-p", "/dev/ttyACM0", "-c", "-d", "15", "-z", str(zip_out)],
+    )
+    assert result.exit_code == 0
+    mock_collect.assert_called_once_with(
+        port="/dev/ttyACM0",
+        duration=15.0,
+        zip_output_path=zip_out,
+    )
 
 
 def test_cli_missing_firmware() -> None:

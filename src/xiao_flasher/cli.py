@@ -1,6 +1,7 @@
 """CLI entry point and workflow orchestrator for xiao-flasher."""
 
 import sys
+import time
 from pathlib import Path
 
 import click
@@ -66,6 +67,27 @@ from xiao_flasher.telemetry import TelemetryLogger
     default=10.0,
     help="Timeout in seconds for device reset and verification.",
 )
+@click.option(
+    "-c",
+    "--collect-serial",
+    is_flag=True,
+    default=False,
+    help="Collect serial output after flashing.",
+)
+@click.option(
+    "-d",
+    "--duration",
+    type=float,
+    default=20.0,
+    help="Duration in seconds to collect serial data.",
+)
+@click.option(
+    "-z",
+    "--zip-output",
+    type=click.Path(dir_okay=False, path_type=Path),
+    default=None,
+    help="Path to save compressed .zip file containing collected serial log.",
+)
 def main(
     firmware: Path,
     port: str | None,
@@ -74,6 +96,9 @@ def main(
     verify: bool,
     json_output: Path | None,
     timeout: float,
+    collect_serial: bool,
+    duration: float,
+    zip_output: Path | None,
 ) -> None:
     """XIAO-RP2040 Firmware Flashing CLI."""
     logger = TelemetryLogger()
@@ -178,6 +203,29 @@ def main(
     logger.generate_github_summary(result, target_device)
     if json_output:
         logger.export_json(json_output, result, target_device)
+
+    # Perform serial data collection if requested or if zip output path is specified
+    if result.success and (collect_serial or zip_output is not None):
+        serial_port = target_device.port or port
+        if not serial_port:
+            logger.log_info("Polling for re-enumerated serial CDC port...")
+            time_start = time.time()
+            while time.time() - time_start < timeout:
+                devs = device_mgr.find_devices()
+                runtime_devs = [d for d in devs if d.mode == "RUNTIME" and d.port]
+                if runtime_devs:
+                    serial_port = runtime_devs[0].port
+                    break
+                time.sleep(0.5)
+
+        if serial_port:
+            logger.collect_serial_data(
+                port=serial_port,
+                duration=duration,
+                zip_output_path=zip_output,
+            )
+        else:
+            logger.log_error("Cannot collect serial data: Serial CDC port not found after flashing.")
 
     sys.exit(0 if result.success else 1)
 

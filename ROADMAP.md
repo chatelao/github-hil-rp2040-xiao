@@ -18,7 +18,7 @@
 - ⏳ **Cross-Platform Developer CLI**: Deliver a cross-platform Python CLI tool (`xiao-flash`) supporting Linux, macOS, and Windows.
 - ⏳ **Dual Flashing Transport**: Support UF2 volume copying and `picotool` as a fallback mechanism.
 - ⏳ **Reliable State Transitions**: Implement automatic 1200-baud rate serial touch reset to switch from Runtime CDC mode to BOOTSEL mode.
-- ⏳ **Comprehensive Telemetry**: Output structured CLI logging, JSON test reports, and GitHub Actions step summaries.
+- ⏳ **Comprehensive Telemetry & Serial Collection**: Output structured CLI logging, JSON test reports, GitHub Actions step summaries, and collect USB-serial output for 20 seconds as a zipped archive artifact (`.zip`).
 
 ---
 
@@ -69,7 +69,8 @@
   - [x] Implement console logger with ANSI color formatting.
   - [x] Implement GitHub Actions Step Summary reporter (`$GITHUB_STEP_SUMMARY`).
   - [x] Implement structured JSON result exporter (`--json-output`).
-  - [x] Unit test telemetry report generation.
+  - [x] Implement 20-second USB serial data collection and `.zip` archive creation (`collect_serial_data`).
+  - [x] Unit test telemetry report generation and serial log zipping.
 - [x] **Task 3.4: CLI & Workflow Integration Orchestrator (`xiao_flasher.cli`)** (2026-09-07 20:30 UTC)
   - [x] Implement CLI argument parsing using `Click` (support short `-f` and long `--firmware` options for all CLI flags).
   - [x] Integrate orchestrator flow calling discovery, flasher, and telemetry modules.
@@ -80,8 +81,8 @@
 ### Phase 4: GitHub Action Packaging & Integration Testing
 
 - [x] **Task 4.1: Composite GitHub Action (`action.yml`)** (2026-09-07 21:15 UTC)
-  - [x] Create `action.yml` defining action inputs (firmware path, target port, timeout, forced mode).
-  - [x] Add Python environment setup and `xiao-flasher` package execution steps.
+  - [x] Create `action.yml` defining action inputs (firmware path, target port, timeout, forced mode, serial collection options).
+  - [x] Add Python environment setup, `xiao-flasher` execution, and serial `.zip` log artifact upload step.
 - [x] **Task 4.2: Simulated Hardware Test Harness** (2026-09-07 22:00 UTC)
   - [x] Implement virtual serial port device simulator for 1200-baud touch reset handling.
   - [x] Implement mock BOOTSEL volume state transition fixture and post-flash verification harness.

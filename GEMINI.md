@@ -1,7 +1,7 @@
 GEMINI.md
 
 # Goal
-Build an AI web chatbot based on a private vLLM engine.
+Build an automated firmware flasher and serial data collection tool for Seeed Studio XIAO-RP2040, running the script for 20 seconds to collect data on the USB-serial port and reporting it back to GitHub as a `.zip` file.
 
 # Structure
 - `CONCEPT.md`: The overall structure of the product, including Business & Use Cases as well as the High-Level Architecture.
