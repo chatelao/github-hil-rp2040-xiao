@@ -8,17 +8,17 @@
 | **Phase 2** | Technical Interfaces & Data Models Definition | ✅ |
 | **Phase 3** | Core Module Implementation | ✅ |
 | **Phase 4** | GitHub Action Packaging & Integration Testing | ✅ |
-| **Phase 5** | Documentation & Release Finalization | ⏳ |
+| **Phase 5** | Documentation & Release Finalization | ✅ |
 
 ---
 
 ## Goals
 
-- ⏳ **Automated CI/CD Flashing**: Provide a GitHub Composite Action to automatically flash firmware onto Seeed Studio XIAO-RP2040 boards attached to runners.
-- ⏳ **Cross-Platform Developer CLI**: Deliver a cross-platform Python CLI tool (`xiao-flash`) supporting Linux, macOS, and Windows.
-- ⏳ **Dual Flashing Transport**: Support UF2 volume copying and `picotool` as a fallback mechanism.
-- ⏳ **Reliable State Transitions**: Implement automatic 1200-baud rate serial touch reset to switch from Runtime CDC mode to BOOTSEL mode.
-- ⏳ **Comprehensive Telemetry & Serial Collection**: Output structured CLI logging, JSON test reports, GitHub Actions step summaries, and collect USB-serial output for 20 seconds as a zipped archive artifact (`.zip`).
+- ✅ **Automated CI/CD Flashing**: Provide a GitHub Composite Action to automatically flash firmware onto Seeed Studio XIAO-RP2040 boards attached to runners.
+- ✅ **Cross-Platform Developer CLI**: Deliver a cross-platform Python CLI tool (`xiao-flash`) supporting Linux, macOS, and Windows.
+- ✅ **Dual Flashing Transport**: Support UF2 volume copying and `picotool` as a fallback mechanism.
+- ✅ **Reliable State Transitions**: Implement automatic 1200-baud rate serial touch reset to switch from Runtime CDC mode to BOOTSEL mode.
+- ✅ **Comprehensive Telemetry & Serial Collection**: Output structured CLI logging, JSON test reports, GitHub Actions step summaries, and collect USB-serial output for 20 seconds as a zipped archive artifact (`.zip`).
 
 ---
 
@@ -97,9 +97,9 @@
 
 ### Phase 5: Documentation & Polish
 
-- [ ] **Task 5.1: Project Documentation**
-  - [ ] Update `README.md` with usage instructions, CLI options reference, and GitHub Action integration examples.
-  - [ ] Ensure all technical debts identified during implementation are logged in `TECHNICAL_DEBTS.md`.
-- [ ] **Task 5.2: Final Release Preparation**
-  - [ ] Validate codebase against `CONCEPT.md`, `DESIGN.md`, and `GEMINI.md` requirements.
-  - [ ] Perform pre-commit validation and freeze release v1.0.0 tag.
+- [x] **Task 5.1: Project Documentation** (2026-09-08 06:45 UTC)
+  - [x] Update `README.md` with usage instructions, CLI options reference, and GitHub Action integration examples.
+  - [x] Ensure all technical debts identified during implementation are logged in `TECHNICAL_DEBTS.md`.
+- [x] **Task 5.2: Final Release Preparation** (2026-09-08 06:45 UTC)
+  - [x] Validate codebase against `CONCEPT.md`, `DESIGN.md`, and `GEMINI.md` requirements.
+  - [x] Perform pre-commit validation and freeze release v1.0.0 tag.
