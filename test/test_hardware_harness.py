@@ -215,3 +215,18 @@ def test_cli_end_to_end_simulated_flashing(
 
     report_content = json_report_path.read_text(encoding="utf-8")
     assert '"success": true' in report_content
+
+
+sketch_uf2_path = (
+    Path(__file__).parent / "fixtures" / "sample_sketch" / "build" / "sample_sketch.ino.uf2"
+)
+
+
+@pytest.mark.skipif(
+    not sketch_uf2_path.exists(),
+    reason="Compiled sample sketch binary not found. Run compile_sample.sh to generate it.",
+)
+def test_compiled_sample_sketch_uf2_validation() -> None:
+    """Validate that the compiled sample sketch UF2 binary meets RP2040 requirements."""
+    flasher = UF2Flasher()
+    assert flasher.validate_firmware(str(sketch_uf2_path)) is True
