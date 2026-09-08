@@ -9,6 +9,7 @@
 | **Phase 3** | Core Module Implementation | ✅ |
 | **Phase 4** | GitHub Action Packaging & Integration Testing | ✅ |
 | **Phase 5** | Documentation & Release Finalization | ✅ |
+| **Phase 6** | Post-Release Enhancements & Maintenance | ⏳ |
 
 ---
 
@@ -103,3 +104,19 @@
 - [x] **Task 5.2: Final Release Preparation** (2026-09-08 08:00 UTC)
   - [x] Validate codebase against `CONCEPT.md`, `DESIGN.md`, and `GEMINI.md` requirements.
   - [x] Perform pre-commit validation and freeze release v1.0.0 tag.
+
+---
+
+### Phase 6: Post-Release Enhancements & Maintenance
+
+- [ ] **Task 6.1: Asynchronous Serial Telemetry Reader Implementation**
+  - [ ] Refactor `TelemetryLogger.collect_serial_data` to use background thread reader queue instead of synchronous polling loop.
+  - [ ] Add non-blocking serial collection option `--async-serial` in CLI interface.
+  - [ ] Update unit tests in `test/test_telemetry.py` to cover async serial data collection thread safety.
+- [ ] **Task 6.2: Custom BOOTSEL Volume Label Configuration**
+  - [ ] Add CLI option `-l`/`--label` to accept custom RP2040 bootloader volume labels beyond default `RPI-RP2`.
+  - [ ] Update `DeviceManager.find_bootsel_devices` to match configurable volume label list.
+  - [ ] Add unit tests in `test/test_discovery.py` verifying custom label matching.
+- [ ] **Task 6.3: Enhanced Hardware-in-the-Loop (HIL) CI Workflow**
+  - [ ] Extend `.github/workflows/ci.yml` with optional HIL test runner job for physical XIAO-RP2040 hardware execution.
+  - [ ] Document HIL test setup procedure in `HOWTO.md`.
