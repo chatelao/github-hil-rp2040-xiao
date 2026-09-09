@@ -9,6 +9,7 @@
 | **Phase 3** | Core Module Implementation | ✅ |
 | **Phase 4** | GitHub Action Packaging & Integration Testing | ✅ |
 | **Phase 5** | Documentation & Release Finalization | ✅ |
+| **Phase 6** | Documentation Publishing & Advanced CI Automation | ⏳ |
 
 ---
 
@@ -103,3 +104,14 @@
 - [x] **Task 5.2: Final Release Preparation** (2026-09-08 08:00 UTC)
   - [x] Validate codebase against `CONCEPT.md`, `DESIGN.md`, and `GEMINI.md` requirements.
   - [x] Perform pre-commit validation and freeze release v1.0.0 tag.
+
+---
+
+### Phase 6: Documentation Publishing & Advanced CI Automation
+
+- [ ] **Task 6.1: ReadTheDocs Documentation Infrastructure**
+  - [ ] Add Sphinx documentation configuration (`docs/conf.py` and `docs/index.rst`).
+  - [ ] Configure ReadTheDocs integration file (`.readthedocs.yaml`).
+- [ ] **Task 6.2: Multi-OS Workflow Matrix & Artifact Management**
+  - [ ] Extend `.github/workflows/ci.yml` matrix to test CLI across Ubuntu, macOS, and Windows runners.
+  - [ ] Add automated release packaging and artifact publishing job to GitHub Actions workflow.
