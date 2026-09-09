@@ -9,6 +9,7 @@
 | **Phase 3** | Core Module Implementation | ✅ |
 | **Phase 4** | GitHub Action Packaging & Integration Testing | ✅ |
 | **Phase 5** | Documentation & Release Finalization | ✅ |
+| **Phase 6** | Hardware-Free Flashing Simulation | ⏳ |
 
 ---
 
@@ -19,6 +20,7 @@
 - ✅ **Dual Flashing Transport**: Support UF2 volume copying and `picotool` as a fallback mechanism.
 - ✅ **Reliable State Transitions**: Implement automatic 1200-baud rate serial touch reset to switch from Runtime CDC mode to BOOTSEL mode.
 - ✅ **Comprehensive Telemetry & Serial Collection**: Output structured CLI logging, JSON test reports, GitHub Actions step summaries, and collect USB-serial output for 20 seconds as a zipped archive artifact (`.zip`).
+- ⏳ **Hardware-Free Flashing Simulation**: Support `-s` / `--simulate` CLI flag to emulate board reset, UF2 flashing, and telemetry collection in headless environments without physical USB hardware.
 
 ---
 
@@ -103,3 +105,25 @@
 - [x] **Task 5.2: Final Release Preparation** (2026-09-08 08:00 UTC)
   - [x] Validate codebase against `CONCEPT.md`, `DESIGN.md`, and `GEMINI.md` requirements.
   - [x] Perform pre-commit validation and freeze release v1.0.0 tag.
+
+---
+
+### Phase 6: Hardware-Free Flashing Simulation
+
+*Note: Interface definitions for simulation components are established first to enable parallelized implementation.*
+
+- [ ] **Task 6.1: Virtual Simulation Interfaces & Data Models (`xiao_flasher.simulation.interfaces`)**
+  - [ ] Define `IVirtualDeviceManagement` abstract interface for virtual device discovery and 1200-baud reset state simulation.
+  - [ ] Define `IVirtualFirmwareTransport` abstract interface for virtual UF2 storage writes and unmount verification.
+  - [ ] Define `SimulationConfig` data model (virtual port name, virtual mount path, failure injection parameters).
+- [ ] **Task 6.2: Virtual Hardware Simulator Module (`xiao_flasher.simulation.provider`)**
+  - [ ] Implement `VirtualDeviceManager` with simulated state transitions (`RUNTIME` -> `RESETTING` -> `BOOTSEL`).
+  - [ ] Implement `VirtualUF2Transport` with mock mount directory creation, UF2 magic header validation, and unmount simulation.
+  - [ ] Implement error injection hooks (`corrupt_uf2`, `reset_timeout`, `write_failure`) for testing edge cases.
+- [ ] **Task 6.3: CLI Simulation Integration & Telemetry Injector (`xiao_flasher.cli`)**
+  - [ ] Add `-s` and `--simulate` CLI flag support to `xiao-flash`.
+  - [ ] Integrate simulation mode switch into `cli.py` workflow orchestrator to bypass physical USB hardware access when `--simulate` is set.
+  - [ ] Update `TelemetryLogger` to annotate simulation execution markers in output logs, JSON reports, and GitHub summaries.
+- [ ] **Task 6.4: Simulation Verification & Documentation**
+  - [ ] Add unit tests for `VirtualDeviceManager` and `VirtualUF2Transport` in `test/test_simulation.py`.
+  - [ ] Update `README.md` and `HOWTO.md` with `--simulate` flag usage instructions and CI simulation examples.
