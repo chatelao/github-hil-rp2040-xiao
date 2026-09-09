@@ -9,6 +9,7 @@
 | **Phase 3** | Core Module Implementation | ✅ |
 | **Phase 4** | GitHub Action Packaging & Integration Testing | ✅ |
 | **Phase 5** | Documentation & Release Finalization | ✅ |
+| **Phase 6** | Hardware-Free Flashing Simulation | ⏳ |
 
 ---
 
@@ -19,6 +20,7 @@
 - ✅ **Dual Flashing Transport**: Support UF2 volume copying and `picotool` as a fallback mechanism.
 - ✅ **Reliable State Transitions**: Implement automatic 1200-baud rate serial touch reset to switch from Runtime CDC mode to BOOTSEL mode.
 - ✅ **Comprehensive Telemetry & Serial Collection**: Output structured CLI logging, JSON test reports, GitHub Actions step summaries, and collect USB-serial output for 20 seconds as a zipped archive artifact (`.zip`).
+- ⏳ **Hardware-Free Flashing Simulation**: Provide in-process virtual board context, simulated 1200-baud reset state machine, and error injection for headless CI and dry-run CLI operations (`xiao-flash --simulate`).
 
 ---
 
@@ -103,3 +105,27 @@
 - [x] **Task 5.2: Final Release Preparation** (2026-09-08 08:00 UTC)
   - [x] Validate codebase against `CONCEPT.md`, `DESIGN.md`, and `GEMINI.md` requirements.
   - [x] Perform pre-commit validation and freeze release v1.0.0 tag.
+
+---
+
+### Phase 6: Hardware-Free Flashing Simulation
+
+*Note: Interface definitions and virtual device abstractions are established first to enable modular simulation capability without physical hardware dependencies.*
+
+- [ ] **Task 6.1: Virtual Hardware Simulation Interfaces & Types (`xiao_flasher.simulation.interfaces`)**
+  - [ ] Define `IVirtualDeviceManagement` abstract base class (`create_virtual_device`, `simulate_baud_reset`).
+  - [ ] Define `IVirtualFirmwareTransport` abstract base class (`validate_virtual_uf2`, `simulate_uf2_flash`).
+  - [ ] Define `SimulationConfig` dataclass (mock mount directory, artificial delay, simulated port name, fault injection parameters).
+- [ ] **Task 6.2: Virtual Device Context & Lifecycle State Machine (`xiao_flasher.simulation.device`)**
+  - [ ] Implement `VirtualDeviceManager` tracking board modes (`RUNTIME` -> `RESETTING` -> `BOOTSEL` -> `FLASHED`).
+  - [ ] Implement virtual serial pty device context and 1200-baud touch reset handler.
+  - [ ] Implement virtual `RPI-RP2` file system directory creation and auto-cleanup.
+- [ ] **Task 6.3: Virtual Transport & Error Injection Engine (`xiao_flasher.simulation.transport`)**
+  - [ ] Implement virtual UF2 header parser and payload block validator for RP2040 family ID (`0xe48dba66`).
+  - [ ] Implement synthetic flash write duration simulation and virtual volume unmount lifecycle trigger.
+  - [ ] Implement error injection handler (emulate missing volume, corrupt UF2 header, and reset timeout conditions).
+- [ ] **Task 6.4: CLI & Workflow Simulation Orchestration (`xiao_flasher.cli`)**
+  - [ ] Add `-s` / `--simulate` flag to CLI options in `xiao_flasher.cli`.
+  - [ ] Integrate simulation mode dispatcher in CLI execution workflow for dry-run and headless CI runs.
+  - [ ] Add telemetry markers indicating simulated execution in JSON exports and GitHub step summaries.
+  - [ ] Add unit and end-to-end simulation tests in `test/test_simulation.py`.
