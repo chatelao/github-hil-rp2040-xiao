@@ -9,12 +9,14 @@
 | **Phase 3** | Core Module Implementation | ✅ |
 | **Phase 4** | GitHub Action Packaging & Integration Testing | ✅ |
 | **Phase 5** | Documentation & Release Finalization | ✅ |
+| **Phase 6** | Multi-Board Concurrent Flashing & Extended Diagnostic Telemetry | ⏳ |
 
 ---
 
 ## Goals
 
 - ✅ **Automated CI/CD Flashing**: Provide a GitHub Composite Action to automatically flash firmware onto Seeed Studio XIAO-RP2040 boards attached to runners.
+- ⏳ **Multi-Board Support**: Support target selection and concurrent flashing for multi-device test benches.
 - ✅ **Cross-Platform Developer CLI**: Deliver a cross-platform Python CLI tool (`xiao-flash`) supporting Linux, macOS, and Windows.
 - ✅ **Dual Flashing Transport**: Support UF2 volume copying and `picotool` as a fallback mechanism.
 - ✅ **Reliable State Transitions**: Implement automatic 1200-baud rate serial touch reset to switch from Runtime CDC mode to BOOTSEL mode.
@@ -103,3 +105,20 @@
 - [x] **Task 5.2: Final Release Preparation** (2026-09-08 08:00 UTC)
   - [x] Validate codebase against `CONCEPT.md`, `DESIGN.md`, and `GEMINI.md` requirements.
   - [x] Perform pre-commit validation and freeze release v1.0.0 tag.
+
+---
+
+### Phase 6: Multi-Board Concurrent Flashing & Extended Diagnostic Telemetry
+
+- [ ] **Task 6.1: Multi-Device Target Selection Interface**
+  - [ ] Extend `xiao_flasher.models.DeviceInfo` and `IDeviceManagement` to query and filter target devices by serial number and USB port location.
+  - [ ] Add `-s` / `--serial` CLI flag to `xiao_flasher.cli` for filtering target boards.
+- [ ] **Task 6.2: Parallel Device Bootloader Reset & UF2 Transport**
+  - [ ] Implement concurrent 1200-baud touch reset handling across multiple detected CDC serial ports.
+  - [ ] Implement concurrent UF2 streaming to multiple target `RPI-RP2` volumes in `xiao_flasher.flasher`.
+- [ ] **Task 6.3: Advanced Diagnostic Serial Log Filtering**
+  - [ ] Implement log output pattern matchers and regex filtering in `xiao_flasher.telemetry` during serial data collection.
+  - [ ] Expose configurable post-flash collection duration CLI option (`-d` / `--collect-duration`).
+- [ ] **Task 6.4: Integration Test Suite & Documentation Updates**
+  - [ ] Extend `test/test_hardware_harness.py` with multi-device simulation fixtures and test cases.
+  - [ ] Update `README.md` and `DESIGN.md` to document multi-device flashing procedures and CLI options.
