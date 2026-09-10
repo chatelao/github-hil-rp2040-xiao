@@ -9,6 +9,7 @@
 | **Phase 3** | Core Module Implementation | ✅ |
 | **Phase 4** | GitHub Action Packaging & Integration Testing | ✅ |
 | **Phase 5** | Documentation & Release Finalization | ✅ |
+| **Phase 6** | Maintenance & Advanced Telemetry Enhancements | ⏳ |
 
 ---
 
@@ -19,6 +20,7 @@
 - ✅ **Dual Flashing Transport**: Support UF2 volume copying and `picotool` as a fallback mechanism.
 - ✅ **Reliable State Transitions**: Implement automatic 1200-baud rate serial touch reset to switch from Runtime CDC mode to BOOTSEL mode.
 - ✅ **Comprehensive Telemetry & Serial Collection**: Output structured CLI logging, JSON test reports, GitHub Actions step summaries, and collect USB-serial output for 20 seconds as a zipped archive artifact (`.zip`).
+- ⏳ **Advanced Telemetry & Debt Mitigations**: Enhance serial data collection to support background non-blocking execution and configurable volume label detection.
 
 ---
 
@@ -103,3 +105,19 @@
 - [x] **Task 5.2: Final Release Preparation** (2026-09-08 08:00 UTC)
   - [x] Validate codebase against `CONCEPT.md`, `DESIGN.md`, and `GEMINI.md` requirements.
   - [x] Perform pre-commit validation and freeze release v1.0.0 tag.
+
+---
+
+### Phase 6: Maintenance & Advanced Telemetry Enhancements
+
+*Note: Interface definitions are established first to enable parallelized development of underlying modules.*
+
+- [ ] **Task 6.1: Async Serial Reader Interface Definition (`xiao_flasher.telemetry`)**
+  - [ ] Define `IAsyncSerialReader` interface for non-blocking background USB serial data capture (`TD-003`).
+  - [ ] Add unit tests for asynchronous serial logging interface contract.
+- [ ] **Task 6.2: Custom Volume Label Support Interface (`xiao_flasher.discovery`)**
+  - [ ] Extend `IDeviceManagement` interface and CLI options (`-l`/`--label`) to accept custom BOOTSEL volume labels (`TD-004`).
+  - [ ] Add unit tests for custom volume label matching logic.
+- [ ] **Task 6.3: Async Telemetry Implementation & CLI Integration**
+  - [ ] Implement thread-based background worker in `TelemetryLogger` for async serial collection without blocking main thread.
+  - [ ] Update CLI options and action inputs to support asynchronous background collection mode.
