@@ -9,6 +9,7 @@
 | **Phase 3** | Core Module Implementation | ✅ |
 | **Phase 4** | GitHub Action Packaging & Integration Testing | ✅ |
 | **Phase 5** | Documentation & Release Finalization | ✅ |
+| **Phase 6** | Advanced Telemetry & Multi-Device Enhancements | ⏳ |
 
 ---
 
@@ -103,3 +104,21 @@
 - [x] **Task 5.2: Final Release Preparation** (2026-09-08 08:00 UTC)
   - [x] Validate codebase against `CONCEPT.md`, `DESIGN.md`, and `GEMINI.md` requirements.
   - [x] Perform pre-commit validation and freeze release v1.0.0 tag.
+
+---
+
+### Phase 6: Advanced Telemetry & Multi-Device Enhancements
+
+- [ ] **Task 6.1: Multi-Device Filtering & Custom Bootloader Configuration**
+  - [ ] Add CLI flags and internal support for USB serial number matching (`-s` / `--serial-number`).
+  - [ ] Add support for custom bootloader volume labels (`-l` / `--volume-label`, resolving TD-004).
+  - [ ] Add support for custom target USB Vendor ID / Product ID selection (`--vid` / `--pid`).
+  - [ ] Update device discovery tests in `test/test_discovery.py` to cover target filtering options.
+- [ ] **Task 6.2: Asynchronous Non-Blocking Serial Telemetry Capture**
+  - [ ] Refactor `TelemetryLogger.collect_serial_data` to use background queue-based thread reader (resolving TD-003).
+  - [ ] Add line timestamping and ISO 8601 log annotations to captured serial stream data.
+  - [ ] Add unit tests in `test/test_telemetry.py` for asynchronous serial collection and buffer flushing.
+- [ ] **Task 6.3: Advanced Error Recovery & Diagnostic Logging**
+  - [ ] Implement verbose debug logging exporter (`-g` / `--debug-log`).
+  - [ ] Add fallback soft USB bus reset sequence when target device becomes unresponsive during reset touch.
+  - [ ] Add integration tests in `test/test_hardware_harness.py` validating error recovery and debug log output.
