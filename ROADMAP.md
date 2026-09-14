@@ -9,6 +9,7 @@
 | **Phase 3** | Core Module Implementation | ✅ |
 | **Phase 4** | GitHub Action Packaging & Integration Testing | ✅ |
 | **Phase 5** | Documentation & Release Finalization | ✅ |
+| **Phase 6** | Advanced Diagnostic Monitoring & Multi-Device Support | ⏳ |
 
 ---
 
@@ -19,6 +20,7 @@
 - ✅ **Dual Flashing Transport**: Support UF2 volume copying and `picotool` as a fallback mechanism.
 - ✅ **Reliable State Transitions**: Implement automatic 1200-baud rate serial touch reset to switch from Runtime CDC mode to BOOTSEL mode.
 - ✅ **Comprehensive Telemetry & Serial Collection**: Output structured CLI logging, JSON test reports, GitHub Actions step summaries, and collect USB-serial output for 20 seconds as a zipped archive artifact (`.zip`).
+- ⏳ **Multi-Device Target Selection & Pattern Telemetry**: Enable targeted multi-board selection by USB serial number, serial output string regex pattern matching assertions, and HTML diagnostic report output.
 
 ---
 
@@ -103,3 +105,19 @@
 - [x] **Task 5.2: Final Release Preparation** (2026-09-08 08:00 UTC)
   - [x] Validate codebase against `CONCEPT.md`, `DESIGN.md`, and `GEMINI.md` requirements.
   - [x] Perform pre-commit validation and freeze release v1.0.0 tag.
+
+---
+
+### Phase 6: Advanced Diagnostic Monitoring & Multi-Device Support
+
+- [ ] **Task 6.1: Selective Multi-Device Discovery & Targeting (`xiao_flasher.discovery`)**
+  - [ ] Define multi-device targeting interface additions (`ITargetSelector`) for board serial filtering.
+  - [ ] Support CLI options short `-s` and long `--serial-number` for selecting target board by USB serial number.
+  - [ ] Implement multi-board listing and selection logic in `xiao_flasher.discovery`.
+- [ ] **Task 6.2: Serial Data Pattern Validation & Assertion (`xiao_flasher.telemetry`)**
+  - [ ] Define telemetry pattern validator interface (`IPatternValidator`).
+  - [ ] Support CLI options short `-e` and long `--pattern-match` for regex matching on collected serial data.
+  - [ ] Implement regex assertion validator in `xiao_flasher.telemetry` with pass/fail exit status support.
+- [ ] **Task 6.3: HTML Diagnostic Report Generation (`xiao_flasher.telemetry`)**
+  - [ ] Support CLI options short `-o` and long `--html-output` for diagnostic HTML report generation.
+  - [ ] Implement standalone HTML report template rendering test status, timing metrics, and formatted serial logs.
