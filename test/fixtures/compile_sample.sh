@@ -21,8 +21,32 @@ fi
 echo "Configuring arduino-cli for RP2040..."
 "${ARDUINO_CLI}" config init --overwrite || true
 "${ARDUINO_CLI}" config add board_manager.additional_urls https://github.com/earlephilhower/arduino-pico/releases/download/global/package_rp2040_index.json || true
-"${ARDUINO_CLI}" core update-index
-"${ARDUINO_CLI}" core install rp2040:rp2040
+
+retry_cmd() {
+  local n=1
+  local max=5
+  local delay=5
+  while true; do
+    if "$@"; then
+      return 0
+    else
+      if [ $n -ge $max ]; then
+        echo "Command '$*' failed after $n attempts."
+        return 1
+      fi
+      echo "Command '$*' failed (attempt $n/$max). Retrying in ${delay}s..."
+      sleep $delay
+      n=$((n+1))
+      delay=$((delay * 2))
+    fi
+  done
+}
+
+echo "Updating arduino-cli index with retries..."
+retry_cmd "${ARDUINO_CLI}" core update-index
+
+echo "Installing RP2040 core with retries..."
+retry_cmd "${ARDUINO_CLI}" core install rp2040:rp2040
 
 echo "Compiling sample sketch for Seeed XIAO-RP2040..."
 "${ARDUINO_CLI}" compile --fqbn rp2040:rp2040:seeed_xiao_rp2040 "${SKETCH_DIR}" --output-dir "${BUILD_DIR}"
