@@ -9,6 +9,7 @@
 | **Phase 3** | Core Module Implementation | ✅ |
 | **Phase 4** | GitHub Action Packaging & Integration Testing | ✅ |
 | **Phase 5** | Documentation & Release Finalization | ✅ |
+| **Phase 6** | Extended CI/CD & Documentation Publishing | ⏳ |
 
 ---
 
@@ -103,3 +104,17 @@
 - [x] **Task 5.2: Final Release Preparation** (2026-09-08 08:00 UTC)
   - [x] Validate codebase against `CONCEPT.md`, `DESIGN.md`, and `GEMINI.md` requirements.
   - [x] Perform pre-commit validation and freeze release v1.0.0 tag.
+
+---
+
+### Phase 6: Extended CI/CD & Documentation Publishing
+
+- [ ] **Task 6.1: Automated Documentation Publishing (ReadTheDocs / GitHub Pages)**
+  - [ ] Configure ReadTheDocs or GitHub Pages deployment workflow for project documentation.
+  - [ ] Generate HTML documentation from Markdown (`CONCEPT.md`, `DESIGN.md`, `HOWTO.md`, `README.md`).
+- [ ] **Task 6.2: Multi-Platform Hardware-in-the-Loop (HIL) Test Grid**
+  - [ ] Add matrix workflow configuration for Linux, macOS, and Windows runners with connected physical XIAO-RP2040 hardware.
+  - [ ] Implement automated hardware reconnect retry logic and port lock management.
+- [ ] **Task 6.3: Advanced Telemetry & Metrics Analytics**
+  - [ ] Add Prometheus/OpenTelemetry metrics exporting for flash write speed and serial log analysis.
+  - [ ] Support custom post-flash serial log pattern matching (regex triggers) in CLI and GitHub Action steps.
