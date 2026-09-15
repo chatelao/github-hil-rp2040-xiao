@@ -9,6 +9,7 @@
 | **Phase 3** | Core Module Implementation | ✅ |
 | **Phase 4** | GitHub Action Packaging & Integration Testing | ✅ |
 | **Phase 5** | Documentation & Release Finalization | ✅ |
+| **Phase 6** | Extended Features & Telemetry Enhancements | ⏳ |
 
 ---
 
@@ -19,6 +20,7 @@
 - ✅ **Dual Flashing Transport**: Support UF2 volume copying and `picotool` as a fallback mechanism.
 - ✅ **Reliable State Transitions**: Implement automatic 1200-baud rate serial touch reset to switch from Runtime CDC mode to BOOTSEL mode.
 - ✅ **Comprehensive Telemetry & Serial Collection**: Output structured CLI logging, JSON test reports, GitHub Actions step summaries, and collect USB-serial output for 20 seconds as a zipped archive artifact (`.zip`).
+- ⏳ **Advanced Telemetry & Multi-Device Support**: Support non-blocking background serial data streaming, configurable volume labels, and multi-board discovery.
 
 ---
 
@@ -103,3 +105,20 @@
 - [x] **Task 5.2: Final Release Preparation** (2026-09-08 08:00 UTC)
   - [x] Validate codebase against `CONCEPT.md`, `DESIGN.md`, and `GEMINI.md` requirements.
   - [x] Perform pre-commit validation and freeze release v1.0.0 tag.
+
+---
+
+### Phase 6: Extended Features & Telemetry Enhancements
+
+- [ ] **Task 6.1: Custom BOOTSEL Volume Label Configuration**
+  - [ ] Add `-l`/`--bootloader-label` CLI flag and update `IDeviceManagement` interface model for custom bootloader labels.
+  - [ ] Implement configurable volume label matching in `xiao_flasher.discovery`.
+  - [ ] Add unit tests for custom bootloader volume label detection.
+- [ ] **Task 6.2: Non-Blocking Asynchronous Serial Collector**
+  - [ ] Design background thread queue architecture for `collect_serial_data` in `xiao_flasher.telemetry`.
+  - [ ] Implement non-blocking telemetry collector streaming logs asynchronously.
+  - [ ] Add unit tests for thread-based serial stream collection and archive generation.
+- [ ] **Task 6.3: Multi-Board Batch Discovery & Flashing Interface**
+  - [ ] Extend `xiao_flasher.cli` options to support multi-device selection (`-a`/`--all-devices`).
+  - [ ] Implement batch flashing orchestrator for multiple connected XIAO-RP2040 boards.
+  - [ ] Add integration unit tests for multi-device flashing workflows.
