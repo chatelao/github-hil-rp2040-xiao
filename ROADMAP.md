@@ -9,6 +9,7 @@
 | **Phase 3** | Core Module Implementation | ✅ |
 | **Phase 4** | GitHub Action Packaging & Integration Testing | ✅ |
 | **Phase 5** | Documentation & Release Finalization | ✅ |
+| **Phase 6** | Post-v1.0 Maintenance & Technical Debt Resolution | ⏳ |
 
 ---
 
@@ -19,6 +20,7 @@
 - ✅ **Dual Flashing Transport**: Support UF2 volume copying and `picotool` as a fallback mechanism.
 - ✅ **Reliable State Transitions**: Implement automatic 1200-baud rate serial touch reset to switch from Runtime CDC mode to BOOTSEL mode.
 - ✅ **Comprehensive Telemetry & Serial Collection**: Output structured CLI logging, JSON test reports, GitHub Actions step summaries, and collect USB-serial output for 20 seconds as a zipped archive artifact (`.zip`).
+- ⏳ **Custom Volume Label & Native USB Enhancements**: Support configurable BOOTSEL volume labels, async serial collection queues, and standalone pyusb bootrom flash transport.
 
 ---
 
@@ -103,3 +105,20 @@
 - [x] **Task 5.2: Final Release Preparation** (2026-09-08 08:00 UTC)
   - [x] Validate codebase against `CONCEPT.md`, `DESIGN.md`, and `GEMINI.md` requirements.
   - [x] Perform pre-commit validation and freeze release v1.0.0 tag.
+
+---
+
+### Phase 6: Post-v1.0 Maintenance & Technical Debt Resolution
+
+- [ ] **Task 6.1: Configurable BOOTSEL Volume Label Support (Addressing TD-004)**
+  - [ ] Add CLI option `-l` / `--volume-label` and `volume_label` parameter in `xiao_flasher.discovery`.
+  - [ ] Support matching custom RP2040 bootloader volume labels beyond default `RPI-RP2`.
+  - [ ] Add unit tests verifying discovery with custom volume label inputs.
+- [ ] **Task 6.2: Asynchronous Non-Blocking Serial Telemetry Collector (Addressing TD-003)**
+  - [ ] Refactor `TelemetryLogger.collect_serial_data` to use a non-blocking background thread with queue.
+  - [ ] Expose progress notifications or cancellation handle during background serial collection.
+  - [ ] Add unit tests verifying non-blocking async serial collection behavior.
+- [ ] **Task 6.3: Embedded PyUSB RP2040 Bootrom Transport (Addressing TD-001)**
+  - [ ] Implement direct `pyusb` interface for RP2040 bootrom vendor commands.
+  - [ ] Fallback to native `pyusb` raw flash transport when `picotool` binary is missing from system PATH.
+  - [ ] Add unit tests for `pyusb` bootrom transport execution and mock USB protocol handling.
