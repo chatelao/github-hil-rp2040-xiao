@@ -9,6 +9,7 @@
 | **Phase 3** | Core Module Implementation | ✅ |
 | **Phase 4** | GitHub Action Packaging & Integration Testing | ✅ |
 | **Phase 5** | Documentation & Release Finalization | ✅ |
+| **Phase 6** | Post-Release Maintenance, Hardening & Extended Hardware Diagnostics | ⏳ |
 
 ---
 
@@ -19,6 +20,7 @@
 - ✅ **Dual Flashing Transport**: Support UF2 volume copying and `picotool` as a fallback mechanism.
 - ✅ **Reliable State Transitions**: Implement automatic 1200-baud rate serial touch reset to switch from Runtime CDC mode to BOOTSEL mode.
 - ✅ **Comprehensive Telemetry & Serial Collection**: Output structured CLI logging, JSON test reports, GitHub Actions step summaries, and collect USB-serial output for 20 seconds as a zipped archive artifact (`.zip`).
+- ⏳ **Extended Hardware Diagnostics & Multi-Board Resilience**: Support advanced USB serial diagnostics, multi-board enumeration filters, and enhanced error telemetry for post-release maintenance.
 
 ---
 
@@ -103,3 +105,17 @@
 - [x] **Task 5.2: Final Release Preparation** (2026-09-08 08:00 UTC)
   - [x] Validate codebase against `CONCEPT.md`, `DESIGN.md`, and `GEMINI.md` requirements.
   - [x] Perform pre-commit validation and freeze release v1.0.0 tag.
+
+---
+
+### Phase 6: Post-Release Maintenance, Hardening & Extended Hardware Diagnostics
+
+- [ ] **Task 6.1: Extended Serial Telemetry & Buffer Diagnostics**
+  - [ ] Add CLI configuration flags (`-b`/`--baud-rate`, `-c`/`--chunk-size`) for post-flash serial log collection.
+  - [ ] Implement buffer overrun monitoring and ISO-8601 timestamp annotation in captured log streams.
+- [ ] **Task 6.2: Multi-Board USB Device Filtering & Selection**
+  - [ ] Extend device discovery logic to filter multiple attached XIAO-RP2040 boards by serial number or USB path.
+  - [ ] Support explicit multi-device target selection in CLI options (`-s` / `--serial-number`).
+- [ ] **Task 6.3: Telemetry Health Checks & Automated Report Formatting**
+  - [ ] Enhance structured JSON test report with USB bus topology details and re-enumeration latency metrics.
+  - [ ] Add unit tests verifying telemetry health check metrics and report structure.
