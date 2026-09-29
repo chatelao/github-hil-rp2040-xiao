@@ -18,11 +18,27 @@ else
   ARDUINO_CLI="arduino-cli"
 fi
 
+retry() {
+  local retries=3
+  local count=0
+  until "$@"; do
+    exit_code=$?
+    count=$((count + 1))
+    if [ $count -lt $retries ]; then
+      echo "Command failed (exit code $exit_code). Retrying in 5 seconds... ($count/$retries)"
+      sleep 5
+    else
+      echo "Command failed after $retries attempts."
+      return $exit_code
+    fi
+  done
+}
+
 echo "Configuring arduino-cli for RP2040..."
 "${ARDUINO_CLI}" config init --overwrite || true
 "${ARDUINO_CLI}" config add board_manager.additional_urls https://github.com/earlephilhower/arduino-pico/releases/download/global/package_rp2040_index.json || true
-"${ARDUINO_CLI}" core update-index
-"${ARDUINO_CLI}" core install rp2040:rp2040
+retry "${ARDUINO_CLI}" core update-index
+retry "${ARDUINO_CLI}" core install rp2040:rp2040
 
 echo "Compiling sample sketch for Seeed XIAO-RP2040..."
 "${ARDUINO_CLI}" compile --fqbn rp2040:rp2040:seeed_xiao_rp2040 "${SKETCH_DIR}" --output-dir "${BUILD_DIR}"
