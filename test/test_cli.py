@@ -32,6 +32,8 @@ def test_cli_help() -> None:
     assert "-c, --collect-serial" in result.output
     assert "-d, --duration" in result.output
     assert "-z, --zip-output" in result.output
+    assert "-b, --baud-rate" in result.output
+    assert "-k, --chunk-size" in result.output
 
 
 @patch("xiao_flasher.cli.TelemetryLogger.collect_serial_data")
@@ -51,13 +53,23 @@ def test_cli_serial_collection(
     runner = CliRunner()
     result = runner.invoke(
         main,
-        ["-f", str(valid_uf2), "-p", "/dev/ttyACM0", "-c", "-d", "15", "-z", str(zip_out)],
+        [
+            "-f", str(valid_uf2),
+            "-p", "/dev/ttyACM0",
+            "-c",
+            "-d", "15",
+            "-z", str(zip_out),
+            "-b", "57600",
+            "-k", "2048",
+        ],
     )
     assert result.exit_code == 0
     mock_collect.assert_called_once_with(
         port="/dev/ttyACM0",
         duration=15.0,
         zip_output_path=zip_out,
+        baudrate=57600,
+        chunk_size=2048,
     )
 
 
