@@ -88,6 +88,20 @@ from xiao_flasher.telemetry import TelemetryLogger
     default=None,
     help="Path to save compressed .zip file containing collected serial log.",
 )
+@click.option(
+    "-b",
+    "--baud-rate",
+    type=int,
+    default=115200,
+    help="Baud rate for serial data collection.",
+)
+@click.option(
+    "-k",
+    "--chunk-size",
+    type=int,
+    default=1024,
+    help="Chunk size in bytes for serial buffer reading.",
+)
 def main(
     firmware: Path,
     port: str | None,
@@ -99,6 +113,8 @@ def main(
     collect_serial: bool,
     duration: float,
     zip_output: Path | None,
+    baud_rate: int,
+    chunk_size: int,
 ) -> None:
     """XIAO-RP2040 Firmware Flashing CLI."""
     logger = TelemetryLogger()
@@ -223,6 +239,8 @@ def main(
                 port=serial_port,
                 duration=duration,
                 zip_output_path=zip_output,
+                baudrate=baud_rate,
+                chunk_size=chunk_size,
             )
         else:
             logger.log_error("Cannot collect serial data: Serial CDC port not found after flashing.")

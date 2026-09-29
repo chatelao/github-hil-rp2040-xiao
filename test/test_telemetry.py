@@ -138,22 +138,25 @@ def test_export_json(tmp_path: Path) -> None:
 
 
 def test_collect_serial_data_success(tmp_path: Path) -> None:
-    """Test collect_serial_data reading serial lines and archiving to zip file."""
+    """Test collect_serial_data reading serial lines and archiving to zip file with timestamps and custom baud rate."""
     zip_path = tmp_path / "test_serial.zip"
     logger = TelemetryLogger(use_ansi=False)
 
     mock_serial = MagicMock()
     mock_serial.__enter__.return_value = mock_serial
-    mock_serial.in_waiting = True
+    mock_serial.in_waiting = 50
     mock_serial.readline.side_effect = [b"Hello World\n", b"Sensor data: 42\n", b""]
 
-    with patch("serial.Serial", return_value=mock_serial):
+    with patch("serial.Serial", return_value=mock_serial) as mock_serial_cls:
         out_path = logger.collect_serial_data(
             port="/dev/ttyACM0",
             duration=0.1,
             zip_output_path=zip_path,
+            baudrate=9600,
+            chunk_size=1024,
         )
 
+    mock_serial_cls.assert_called_once_with("/dev/ttyACM0", baudrate=9600, timeout=0.5)
     assert out_path == zip_path
     assert zip_path.exists()
 
@@ -163,6 +166,33 @@ def test_collect_serial_data_success(tmp_path: Path) -> None:
         log_content = zf.read("serial_output.log").decode("utf-8")
         assert "Hello World" in log_content
         assert "Sensor data: 42" in log_content
+        # Check ISO-8601 timestamp presence in lines
+        assert "[" in log_content and "]" in log_content
+
+
+def test_collect_serial_data_buffer_overrun(tmp_path: Path) -> None:
+    """Test collect_serial_data buffer overrun detection when in_waiting exceeds chunk_size."""
+    zip_path = tmp_path / "overrun_serial.zip"
+    err_stream = io.StringIO()
+    logger = TelemetryLogger(use_ansi=False, error_stream=err_stream)
+
+    mock_serial = MagicMock()
+    mock_serial.__enter__.return_value = mock_serial
+    # Simulate buffer in_waiting greater than chunk_size (e.g. 2000 > 100)
+    mock_serial.in_waiting = 2000
+    mock_serial.read.return_value = b"Chunk of overrun data\n"
+
+    with patch("serial.Serial", return_value=mock_serial):
+        out_path = logger.collect_serial_data(
+            port="/dev/ttyACM0",
+            duration=0.1,
+            zip_output_path=zip_path,
+            baudrate=115200,
+            chunk_size=100,
+        )
+
+    assert out_path == zip_path
+    assert "[ERROR] Buffer overrun detected: 2000 bytes waiting in serial buffer (exceeds chunk size 100)" in err_stream.getvalue()
 
 
 def test_collect_serial_data_serial_exception(tmp_path: Path) -> None:

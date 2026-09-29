@@ -110,9 +110,9 @@
 
 ### Phase 6: Post-Release Maintenance, Hardening & Extended Hardware Diagnostics
 
-- [ ] **Task 6.1: Extended Serial Telemetry & Buffer Diagnostics**
-  - [ ] Add CLI configuration flags (`-b`/`--baud-rate`, `-c`/`--chunk-size`) for post-flash serial log collection.
-  - [ ] Implement buffer overrun monitoring and ISO-8601 timestamp annotation in captured log streams.
+- [x] **Task 6.1: Extended Serial Telemetry & Buffer Diagnostics**
+  - [x] Add CLI configuration flags (`-b`/`--baud-rate`, `-k`/`--chunk-size`) for post-flash serial log collection.
+  - [x] Implement buffer overrun monitoring and ISO-8601 timestamp annotation in captured log streams.
 - [ ] **Task 6.2: Multi-Board USB Device Filtering & Selection**
   - [ ] Extend device discovery logic to filter multiple attached XIAO-RP2040 boards by serial number or USB path.
   - [ ] Support explicit multi-device target selection in CLI options (`-s` / `--serial-number`).
