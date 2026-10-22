@@ -81,7 +81,7 @@ runs:
         fi
 
         if [ "${{ inputs.collect-serial }}" = "true" ]; then
-          ARGS+=(-c)
+          ARGS+=(-C)
         fi
 
         if [ -n "${{ inputs.duration }}" ]; then

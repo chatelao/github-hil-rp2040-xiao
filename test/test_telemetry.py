@@ -138,13 +138,13 @@ def test_export_json(tmp_path: Path) -> None:
 
 
 def test_collect_serial_data_success(tmp_path: Path) -> None:
-    """Test collect_serial_data reading serial lines and archiving to zip file."""
+    """Test collect_serial_data reading serial lines and archiving to zip file with ISO-8601 timestamps."""
     zip_path = tmp_path / "test_serial.zip"
     logger = TelemetryLogger(use_ansi=False)
 
     mock_serial = MagicMock()
     mock_serial.__enter__.return_value = mock_serial
-    mock_serial.in_waiting = True
+    mock_serial.in_waiting = 10
     mock_serial.readline.side_effect = [b"Hello World\n", b"Sensor data: 42\n", b""]
 
     with patch("serial.Serial", return_value=mock_serial):
@@ -152,6 +152,8 @@ def test_collect_serial_data_success(tmp_path: Path) -> None:
             port="/dev/ttyACM0",
             duration=0.1,
             zip_output_path=zip_path,
+            baudrate=115200,
+            chunk_size=1024,
         )
 
     assert out_path == zip_path
@@ -163,6 +165,37 @@ def test_collect_serial_data_success(tmp_path: Path) -> None:
         log_content = zf.read("serial_output.log").decode("utf-8")
         assert "Hello World" in log_content
         assert "Sensor data: 42" in log_content
+        assert "[" in log_content and "]" in log_content
+
+
+def test_collect_serial_data_buffer_overrun(tmp_path: Path) -> None:
+    """Test collect_serial_data when in_waiting exceeds chunk_size."""
+    zip_path = tmp_path / "overrun_serial.zip"
+    err_stream = io.StringIO()
+    logger = TelemetryLogger(use_ansi=False, error_stream=err_stream)
+
+    mock_serial = MagicMock()
+    mock_serial.__enter__.return_value = mock_serial
+    mock_serial.in_waiting = 2048
+    mock_serial.readline.side_effect = [b"High speed log entry\n", b""]
+
+    with patch("serial.Serial", return_value=mock_serial):
+        out_path = logger.collect_serial_data(
+            port="/dev/ttyACM0",
+            duration=0.1,
+            zip_output_path=zip_path,
+            baudrate=115200,
+            chunk_size=1024,
+        )
+
+    assert out_path == zip_path
+    assert zip_path.exists()
+    assert "Buffer overrun threshold reached" in err_stream.getvalue()
+
+    with zipfile.ZipFile(zip_path, "r") as zf:
+        log_content = zf.read("serial_output.log").decode("utf-8")
+        assert "[BUFFER_OVERRUN_WARNING]" in log_content
+        assert "High speed log entry" in log_content
 
 
 def test_collect_serial_data_serial_exception(tmp_path: Path) -> None:
