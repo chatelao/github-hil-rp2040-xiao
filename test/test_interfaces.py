@@ -100,6 +100,7 @@ def test_concrete_implementations() -> None:
             duration: float = 20.0,
             zip_output_path: str | Path | None = None,
             baudrate: int = 115200,
+            chunk_size: int = 1024,
         ) -> Path | None:
             self.logs.append(f"SERIAL: {port} for {duration}s")
             return Path("serial.zip")

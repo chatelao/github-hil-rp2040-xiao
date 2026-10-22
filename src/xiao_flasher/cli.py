@@ -68,7 +68,7 @@ from xiao_flasher.telemetry import TelemetryLogger
     help="Timeout in seconds for device reset and verification.",
 )
 @click.option(
-    "-c",
+    "-C",
     "--collect-serial",
     is_flag=True,
     default=False,
@@ -80,6 +80,20 @@ from xiao_flasher.telemetry import TelemetryLogger
     type=float,
     default=20.0,
     help="Duration in seconds to collect serial data.",
+)
+@click.option(
+    "-b",
+    "--baud-rate",
+    type=int,
+    default=115200,
+    help="Baud rate for post-flash serial log collection.",
+)
+@click.option(
+    "-c",
+    "--chunk-size",
+    type=int,
+    default=1024,
+    help="Chunk size in bytes for post-flash serial log collection.",
 )
 @click.option(
     "-z",
@@ -98,6 +112,8 @@ def main(
     timeout: float,
     collect_serial: bool,
     duration: float,
+    baud_rate: int,
+    chunk_size: int,
     zip_output: Path | None,
 ) -> None:
     """XIAO-RP2040 Firmware Flashing CLI."""
@@ -223,6 +239,8 @@ def main(
                 port=serial_port,
                 duration=duration,
                 zip_output_path=zip_output,
+                baudrate=baud_rate,
+                chunk_size=chunk_size,
             )
         else:
             logger.log_error("Cannot collect serial data: Serial CDC port not found after flashing.")

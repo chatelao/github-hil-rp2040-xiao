@@ -6,6 +6,7 @@ import sys
 import time
 import zipfile
 from abc import ABC, abstractmethod
+from datetime import datetime, timezone
 from pathlib import Path
 from typing import TextIO
 
@@ -42,6 +43,7 @@ class ITelemetryLog(ABC):
         duration: float = 20.0,
         zip_output_path: str | Path | None = None,
         baudrate: int = 115200,
+        chunk_size: int = 1024,
     ) -> Path | None:
         """Collect serial data from port for duration (seconds) and optional zip output."""
 
@@ -157,19 +159,33 @@ class TelemetryLogger(ITelemetryLog):
         duration: float = 20.0,
         zip_output_path: str | Path | None = None,
         baudrate: int = 115200,
+        chunk_size: int = 1024,
     ) -> Path | None:
         """Read CDC serial data for specified duration and package into zip archive."""
-        self.log_info(f"Collecting serial data on port {port} for {duration:.1f} seconds...")
+        self.log_info(
+            f"Collecting serial data on port {port} (baudrate={baudrate}, chunk_size={chunk_size}) for {duration:.1f} seconds..."
+        )
         collected_lines: list[str] = []
         start_time = time.time()
 
         try:
             with serial.Serial(port, baudrate=baudrate, timeout=0.5) as ser:
                 while time.time() - start_time < duration:
-                    if ser.in_waiting:
+                    in_waiting = getattr(ser, "in_waiting", 0)
+                    if in_waiting:
+                        if in_waiting >= chunk_size:
+                            now_str = datetime.now(timezone.utc).isoformat()
+                            warn_msg = (
+                                f"Buffer overrun threshold reached (pending={in_waiting} >= chunk_size={chunk_size})"
+                            )
+                            self.log_error(f"Serial buffer diagnostic warning on {port}: {warn_msg}")
+                            collected_lines.append(f"[{now_str}] [BUFFER_OVERRUN_WARNING] {warn_msg}\n")
+
                         raw_line = ser.readline()
-                        line_str = raw_line.decode("utf-8", errors="replace")
-                        collected_lines.append(line_str)
+                        if raw_line:
+                            line_str = raw_line.decode("utf-8", errors="replace")
+                            now_str = datetime.now(timezone.utc).isoformat()
+                            collected_lines.append(f"[{now_str}] {line_str}")
                     else:
                         time.sleep(0.05)
         except Exception as e:  # noqa: BLE001

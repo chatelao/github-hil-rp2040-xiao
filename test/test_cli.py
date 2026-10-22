@@ -29,8 +29,10 @@ def test_cli_help() -> None:
     assert "-v, --verify" in result.output
     assert "-j, --json-output" in result.output
     assert "-t, --timeout" in result.output
-    assert "-c, --collect-serial" in result.output
+    assert "-C, --collect-serial" in result.output
     assert "-d, --duration" in result.output
+    assert "-b, --baud-rate" in result.output
+    assert "-c, --chunk-size" in result.output
     assert "-z, --zip-output" in result.output
 
 
@@ -51,13 +53,15 @@ def test_cli_serial_collection(
     runner = CliRunner()
     result = runner.invoke(
         main,
-        ["-f", str(valid_uf2), "-p", "/dev/ttyACM0", "-c", "-d", "15", "-z", str(zip_out)],
+        ["-f", str(valid_uf2), "-p", "/dev/ttyACM0", "-C", "-d", "15", "-b", "57600", "-c", "512", "-z", str(zip_out)],
     )
     assert result.exit_code == 0
     mock_collect.assert_called_once_with(
         port="/dev/ttyACM0",
         duration=15.0,
         zip_output_path=zip_out,
+        baudrate=57600,
+        chunk_size=512,
     )
 
 
