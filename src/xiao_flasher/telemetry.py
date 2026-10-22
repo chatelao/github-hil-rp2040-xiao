@@ -6,6 +6,7 @@ import sys
 import time
 import zipfile
 from abc import ABC, abstractmethod
+from datetime import datetime, timezone
 from pathlib import Path
 from typing import TextIO
 
@@ -42,6 +43,7 @@ class ITelemetryLog(ABC):
         duration: float = 20.0,
         zip_output_path: str | Path | None = None,
         baudrate: int = 115200,
+        chunk_size: int = 1024,
     ) -> Path | None:
         """Collect serial data from port for duration (seconds) and optional zip output."""
 
@@ -157,23 +159,46 @@ class TelemetryLogger(ITelemetryLog):
         duration: float = 20.0,
         zip_output_path: str | Path | None = None,
         baudrate: int = 115200,
+        chunk_size: int = 1024,
     ) -> Path | None:
         """Read CDC serial data for specified duration and package into zip archive."""
-        self.log_info(f"Collecting serial data on port {port} for {duration:.1f} seconds...")
+        self.log_info(
+            f"Collecting serial data on port {port} for {duration:.1f}s "
+            f"(baudrate={baudrate}, chunk_size={chunk_size})..."
+        )
         collected_lines: list[str] = []
+        overrun_count = 0
         start_time = time.time()
 
         try:
             with serial.Serial(port, baudrate=baudrate, timeout=0.5) as ser:
                 while time.time() - start_time < duration:
-                    if ser.in_waiting:
-                        raw_line = ser.readline()
-                        line_str = raw_line.decode("utf-8", errors="replace")
-                        collected_lines.append(line_str)
+                    in_w = ser.in_waiting
+                    if in_w > 0:
+                        # Monitor buffer overrun condition
+                        if in_w > chunk_size * 4:
+                            overrun_count += 1
+                            ts_overrun = datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%S.%fZ")
+                            warning_msg = (
+                                f"[{ts_overrun}] [BUFFER OVERRUN WARNING] Unread bytes in buffer: {in_w} bytes\n"
+                            )
+                            collected_lines.append(warning_msg)
+                            self.log_error(f"Buffer overrun detected on {port}: {in_w} unread bytes in buffer.")
+
+                        to_read = min(in_w, chunk_size)
+                        raw_data = ser.read(to_read)
+                        ts = datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%S.%fZ")
+                        text_data = raw_data.decode("utf-8", errors="replace")
+
+                        for line in text_data.splitlines(keepends=True):
+                            collected_lines.append(f"[{ts}] {line}")
                     else:
                         time.sleep(0.05)
         except Exception as e:  # noqa: BLE001
             self.log_error(f"Error reading serial port {port}: {e}")
+
+        if overrun_count > 0:
+            self.log_error(f"Total buffer overrun events detected during collection: {overrun_count}")
 
         log_content = "".join(collected_lines)
         if not zip_output_path:
